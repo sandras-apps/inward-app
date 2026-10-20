@@ -75,15 +75,26 @@ Then a gentle button to continue, and a short step to choose language, how many 
 
 ## Reminders: the calendar approach (no push notifications)
 
-PWAs can't schedule local notifications at fixed times without a server, and we don't want a server. So reminders go through the user's own phone calendar:
+PWAs can't schedule local notifications at fixed times without a server, and we don't want a server. So reminders go through the user's own phone calendar. They are offered in the first setup (a step right after the times) and in Settings.
 
-- The **Add reminders to my calendar** button generates an `.ics` file in the browser (Blob download, nothing leaves the device).
-- One `VEVENT` per chosen time, `RRULE:FREQ=DAILY`, duration 10 minutes, a `VALARM` (`TRIGGER:PT0M`, `ACTION:DISPLAY`) at the start time.
-- Use floating local times (no `TZID`), so the reminder follows the user's local clock.
-- Event title: `Inward`. Description: one gentle line in the user's language plus the app URL. Also set the `URL` field.
+Every reminder is a daily event of **30 minutes** (not shorter: we don't want to rush anyone), titled `Inward`, starting at the chosen time. Description: one gentle line in the user's language plus the app URL.
+
+**On Android** (Google Calendar), a downloaded `.ics` needs too many steps (find the file, choose to open it with Calendar), and Google ignores its alert. So instead:
+
+- One Google Calendar "add event" link per chosen time: `https://calendar.google.com/calendar/render?action=TEMPLATE` with `text`, `dates` (local times, no `Z`), `details` and `recur=RRULE:FREQ=DAILY`. It opens Google Calendar with the event pre-filled; the user just taps Save.
+- With one time, one button ("Add reminders to my calendar"); with 2 or 3 times, one button per time ("Aggiungi le 10:00", "Aggiungi le 18:00"…).
+- Google's link can't set the alert, and Google applies its own default (30 minutes before). So under the button(s), one plain line: IT *Prima di salvare, imposta la notifica su ‘All'ora dell'evento’.* · EN *Before saving, set the notification to ‘At time of event’.*
+
+**On iPhone and other devices**, the button generates an `.ics` file in the browser (Blob download, nothing leaves the device):
+
+- One `VEVENT` per chosen time, `RRULE:FREQ=DAILY`, a `VALARM` (`TRIGGER:PT0M`, `ACTION:DISPLAY`) at the start time. Apple Calendar honours the alert.
+- Use floating local times (no `TZID`), so the reminder follows the user's local clock. Also set the `URL` field.
 - Stable `UID`s per slot, so re-importing doesn't create confusing duplicates where calendars support that.
-- Next to the button, explain in one or two plain lines: the reminder opens the calendar, tap it to open Inward; to change times, delete the old Inward event from the calendar and add the new one.
-- Test that the file imports correctly on Android (Google Calendar) and iPhone (Apple Calendar).
+- After the download, say plainly what to do: open the downloaded file and choose the Calendar app.
+
+Next to the button(s), explain in one or two plain lines: the reminder opens the calendar, tap it to open Inward; to change times, delete the old Inward event from the calendar and add the new one.
+
+Test on Android (Google Calendar) and iPhone (Apple Calendar).
 
 ## Design
 
