@@ -1,7 +1,7 @@
 /* Inward service worker: keeps a copy of every app file so Inward works offline.
    Bump VERSION whenever a file changes, so phones fetch the new copy. */
 
-var VERSION = "inward-v6";
+var VERSION = "inward-v7";
 
 var FILES = [
   "./",
