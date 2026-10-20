@@ -101,7 +101,7 @@
     { "id": "gra-03", "category": "gratitude", "type": "describe", "it": "Racconta un gesto gentile che non hai mai dimenticato.", "en": "Describe a kind gesture you've never forgotten." },
     { "id": "gra-04", "category": "gratitude", "type": "letter", "it": "Scrivi un grazie a qualcuno che non lo sentirà mai.", "en": "Write a thank-you to someone who will never hear it." },
     { "id": "gra-05", "category": "gratitude", "type": "question", "it": "Per cosa potresti ringraziarti oggi?", "en": "What could you thank yourself for today?" },
-    { "id": "gra-06", "category": "gratitude", "type": "complete", "it": "Completa la frase: “Oggi dico grazie a…”", "en": "Finish the sentence: “Today I'm thankful for…”" },
+    { "id": "gra-06", "category": "gratitude", "type": "complete", "it": "Completa la frase: “Oggi dico grazie per…”", "en": "Finish the sentence: “Today I'm thankful for…”" },
     { "id": "gra-07", "category": "gratitude", "type": "question", "it": "Quale difficoltà ti ha dato qualcosa di prezioso?", "en": "Which hardship gave you something precious?" },
     { "id": "gra-08", "category": "gratitude", "type": "image", "it": "Descrivi un piccolo piacere quotidiano come se lo vedessi per la prima volta.", "en": "Describe a small daily pleasure as if you were seeing it for the first time." },
     { "id": "gra-09", "category": "gratitude", "type": "question", "it": "Quale parte di te, che un tempo non sopportavi, oggi ti aiuta?", "en": "Which part of you that you once couldn't stand helps you today?" },
@@ -135,7 +135,7 @@
     { "id": "fea-16", "category": "fears", "type": "complete", "it": "Completa la frase: “Ho paura che le persone pensino che io sia…”", "en": "Finish the sentence: “I'm afraid people think I'm…”" },
     { "id": "fea-17", "category": "fears", "type": "question", "it": "Quali pensieri arrivano di notte, quando tutto è in silenzio?", "en": "Which thoughts come at night, when everything is quiet?" },
     { "id": "fea-18", "category": "fears", "type": "question", "it": "Di cosa avresti bisogno per sentirti al sicuro?", "en": "What would you need to feel safe?" },
-    { "id": "fea-19", "category": "fears", "type": "image", "it": "Descrivi un posto dove la paura non può entrare.", "en": "Describe a place where fear can't follow you." },
+    { "id": "fea-19", "category": "fears", "type": "image", "it": "Descrivi un posto dove la paura non può entrare.", "en": "Describe a place where fear can't get in." },
     { "id": "fea-20", "category": "fears", "type": "question", "it": "Quale rischio ti pentiresti di non aver mai preso?", "en": "Which risk would you regret never taking?" },
 
     { "id": "ide-01", "category": "identity", "type": "question", "it": "Chi eri prima che gli altri ti dicessero chi essere?", "en": "Who were you before others told you who to be?" },
