@@ -29,7 +29,11 @@
       addCalendar: "Aggiungi i promemoria al mio calendario",
       calendarHelp: "Il promemoria arriva dal calendario del telefono: toccalo per aprire Inward. Per cambiare gli orari, elimina il vecchio evento Inward dal calendario e aggiungi quello nuovo.",
       addTime: "Aggiungi le {time}",
-      calendarAndroidNote: "Prima di salvare, imposta la notifica su ‘All'ora dell'evento’.",
+      calendarStep1: {
+        one: "Tocca il pulsante: si apre Google Calendar.",
+        many: "Tocca un pulsante alla volta: si apre Google Calendar."
+      },
+      calendarStep2: "Prima di salvare, tocca ‘30 minuti prima’ e scegli ‘All'ora dell'evento’.",
       calendarReady: "File pronto: apri il file scaricato e scegli la tua app Calendario.",
       calendarDescription: "Un momento per te. Prendi il quaderno e apri Inward.",
       remindersStepTitle: "Un promemoria, se vuoi",
@@ -68,7 +72,11 @@
       addCalendar: "Add reminders to my calendar",
       calendarHelp: "The reminder comes from your phone's calendar: tap it to open Inward. To change the times, delete the old Inward event from your calendar and add the new one.",
       addTime: "Add {time}",
-      calendarAndroidNote: "Before saving, set the notification to ‘At time of event’.",
+      calendarStep1: {
+        one: "Tap the button: Google Calendar opens.",
+        many: "Tap each button in turn: Google Calendar opens."
+      },
+      calendarStep2: "Before saving, tap ‘30 minutes before’ and choose ‘At time of event’.",
       calendarReady: "File ready: open the downloaded file and choose your Calendar app.",
       calendarDescription: "A moment for yourself. Take your notebook and open Inward.",
       remindersStepTitle: "A reminder, if you like",
