@@ -20,7 +20,9 @@
       settings: "Impostazioni",
       language: "Lingua",
       perDay: "Spunti al giorno",
-      times: "A che ora",
+      times: { one: "L'ora del tuo spunto", many: "Gli orari dei tuoi spunti" },
+      timesNote: { one: "A quest'ora trovi uno spunto nuovo, qui nell'app.", many: "A questi orari trovi uno spunto nuovo, qui nell'app." },
+      timesNext: "Per ricevere anche un promemoria, c'è un passo in più subito dopo.",
       daily: "Ogni giorno alle",
       slots: ["Primo spunto", "Secondo spunto", "Terzo spunto"],
       remindersTitle: "Promemoria",
@@ -28,6 +30,13 @@
       calendarHelp: "Il promemoria arriva dal calendario del telefono: toccalo per aprire Inward. Per cambiare gli orari, elimina il vecchio evento Inward dal calendario e aggiungi quello nuovo.",
       calendarReady: "File pronto. Aprilo per aggiungerlo al tuo calendario.",
       calendarDescription: "Un momento per te. Prendi il quaderno e apri Inward.",
+      remindersStepTitle: "Un promemoria, se vuoi",
+      remindersStepText: {
+        one: "Inward non può mandarti notifiche da sola. Se vuoi un promemoria, puoi aggiungerlo al calendario del tuo telefono: arriverà all'ora che hai scelto, e toccandolo aprirai Inward.",
+        many: "Inward non può mandarti notifiche da sola. Se vuoi un promemoria, puoi aggiungerlo al calendario del tuo telefono: arriverà agli orari che hai scelto, e toccandolo aprirai Inward."
+      },
+      remindersStepHelp: "Se un giorno cambi gli orari, trovi questo pulsante anche nelle impostazioni.",
+      notNow: "Non ora",
       rereadWelcome: "Rileggi il benvenuto",
       aboutTitle: "Informazioni e privacy",
       about: "Inward è gratuita e non raccoglie nessun dato: niente account, niente tracciamento, niente cookie. Le tue impostazioni restano solo su questo dispositivo. I promemoria vivono nel tuo calendario, non qui. E quello che scrivi resta sulla carta.",
@@ -46,7 +55,9 @@
       settings: "Settings",
       language: "Language",
       perDay: "Prompts per day",
-      times: "At what time",
+      times: { one: "Time of your prompt", many: "Times of your prompts" },
+      timesNote: { one: "At this time, a new prompt is waiting for you here in the app.", many: "At these times, a new prompt is waiting for you here in the app." },
+      timesNext: "If you'd also like a reminder, there's one more step right after this.",
       daily: "Every day at",
       slots: ["First prompt", "Second prompt", "Third prompt"],
       remindersTitle: "Reminders",
@@ -54,6 +65,13 @@
       calendarHelp: "The reminder comes from your phone's calendar: tap it to open Inward. To change the times, delete the old Inward event from your calendar and add the new one.",
       calendarReady: "File ready. Open it to add it to your calendar.",
       calendarDescription: "A moment for yourself. Take your notebook and open Inward.",
+      remindersStepTitle: "A reminder, if you like",
+      remindersStepText: {
+        one: "Inward can't send you notifications by itself. If you'd like a reminder, you can add one to your phone's calendar: it will arrive at the time you chose, and tapping it opens Inward.",
+        many: "Inward can't send you notifications by itself. If you'd like a reminder, you can add one to your phone's calendar: it will arrive at the times you chose, and tapping it opens Inward."
+      },
+      remindersStepHelp: "If you change the times later, you'll find this button in Settings too.",
+      notNow: "Not now",
       rereadWelcome: "Re-read the welcome",
       aboutTitle: "About & privacy",
       about: "Inward is free and collects no data: no accounts, no tracking, no cookies. Your settings stay on this device only. Reminders live in your own calendar, not here. And what you write stays on paper.",
@@ -346,7 +364,13 @@
     link.click();
     link.remove();
     setTimeout(function () { URL.revokeObjectURL(link.href); }, 60000);
-    $("#calendar-status").textContent = STRINGS[settings.lang].calendarReady;
+    $all(".calendar-status").forEach(function (el) {
+      el.textContent = STRINGS[settings.lang].calendarReady;
+    });
+    // In the setup step, "Not now" becomes "Continue" once the file is made.
+    var done = $("#reminders-done");
+    done.setAttribute("data-i18n", "continue");
+    done.textContent = STRINGS[settings.lang].continue;
   }
 
   // ---------------------------------------------------------------------------
@@ -362,11 +386,19 @@
 
   var shown = null; // which prompt is on screen, to fade only when it changes
 
+  // Some texts have a singular and a plural form, depending on prompts per day.
+  function text(key) {
+    var value = STRINGS[settings.lang][key];
+    if (value && typeof value === "object" && !Array.isArray(value)) {
+      return settings.perDay === 1 ? value.one : value.many;
+    }
+    return value;
+  }
+
   function applyLanguage() {
-    var t = STRINGS[settings.lang];
     document.documentElement.lang = settings.lang;
     $all("[data-i18n]").forEach(function (el) {
-      el.textContent = t[el.getAttribute("data-i18n")];
+      el.textContent = text(el.getAttribute("data-i18n"));
     });
     renderChoices();
   }
@@ -387,6 +419,9 @@
       el.hidden = el.id !== id;
     });
     window.scrollTo(0, 0);
+    // Redraw the form each time, so it always shows what is saved
+    // (a time changed during setup must also appear in Settings).
+    if (id === "setup" || id === "settings") renderChoices();
     if (id === "today") renderPrompt();
   }
 
@@ -419,10 +454,14 @@
       if (!form.firstElementChild) {
         form.appendChild($("#choices-template").content.cloneNode(true));
         form.addEventListener("change", onChoiceChange);
+        // Some phones only report a new time on "input", or late on "change".
+        form.addEventListener("input", function (e) {
+          if (e.target.name === "time") onChoiceChange(e);
+        });
         form.addEventListener("submit", function (e) { e.preventDefault(); });
       }
       $all("[data-i18n]", form).forEach(function (el) {
-        el.textContent = t[el.getAttribute("data-i18n")];
+        el.textContent = text(el.getAttribute("data-i18n"));
       });
       $all('input[name="lang"]', form).forEach(function (input) {
         input.checked = input.value === settings.lang;
@@ -462,7 +501,7 @@
       settings.perDay = Number(input.value);
       settings.times = DEFAULT_TIMES[settings.perDay].slice();
       saveSettings();
-      renderChoices();
+      applyLanguage();
       shown = null;
     } else if (input.name === "time") {
       if (!isTime(input.value)) return;
@@ -470,7 +509,18 @@
       saveSettings();
       shown = null;
     }
-    $("#calendar-status").textContent = "";
+    $all(".calendar-status").forEach(function (el) {
+      el.textContent = "";
+    });
+  }
+
+  // Read the times straight from the form too, in case the phone's time picker
+  // was still open and hadn't reported the change yet.
+  function readTimes(form) {
+    $all('input[name="time"]', form).forEach(function (input) {
+      var slot = Number(input.getAttribute("data-slot"));
+      if (isTime(input.value) && slot < settings.perDay) settings.times[slot] = input.value;
+    });
   }
 
   // Times can be typed in any order; slots always run from earliest to latest.
@@ -492,11 +542,11 @@
     renderPrompt();
   }
 
-  function finishWelcome() {
+  function finishSetup() {
     tidyTimes();
     settings.welcomed = true;
     saveSettings();
-    showScreen("today");
+    showScreen("reminders");
   }
 
   // ---------------------------------------------------------------------------
@@ -506,26 +556,40 @@
     $("#welcome-continue").addEventListener("click", function () {
       showScreen(settings.welcomed ? "settings" : "setup");
     });
-    $("#setup-start").addEventListener("click", finishWelcome);
+    $("#setup-start").addEventListener("click", function () {
+      readTimes($("#setup [data-choices]"));
+      finishSetup();
+    });
     $("#setup-skip").addEventListener("click", function () {
       settings = { lang: settings.lang, perDay: 1, times: DEFAULT_TIMES[1].slice(), welcomed: false };
       applyLanguage();
-      finishWelcome();
+      finishSetup();
+    });
+    $("#reminders-done").addEventListener("click", function () {
+      showScreen("today");
     });
     $("#another").addEventListener("click", anotherPrompt);
     $("#open-settings").addEventListener("click", function () {
       showScreen("settings");
     });
     $("#close-settings").addEventListener("click", function () {
+      readTimes($("#settings [data-choices]"));
+      saveSettings();
       tidyTimes();
       showScreen("today");
     });
     $("#reread-welcome").addEventListener("click", function () {
       showScreen("welcome");
     });
-    $("#add-calendar").addEventListener("click", function () {
-      tidyTimes();
-      downloadCalendar();
+    $all(".add-calendar").forEach(function (button) {
+      button.addEventListener("click", function () {
+        if (!$("#settings").hidden) {
+          readTimes($("#settings [data-choices]"));
+          saveSettings();
+        }
+        tidyTimes();
+        downloadCalendar();
+      });
     });
 
     // Keep the prompt and colours current if the app stays open across a time slot or midnight.

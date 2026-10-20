@@ -172,7 +172,8 @@ body::before {
 }
 
 #settings,
-#setup {
+#setup,
+#reminders {
   justify-content: flex-start;
 }
 
@@ -264,6 +265,10 @@ body::before {
 }
 
 .note:empty {
+  display: none;
+}
+
+#settings [data-setup-only] {
   display: none;
 }
 
