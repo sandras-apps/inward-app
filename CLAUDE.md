@@ -83,7 +83,10 @@ Every reminder is a daily event of **30 minutes** (not shorter: we don't want to
 
 - One Google Calendar "add event" link per chosen time: `https://calendar.google.com/calendar/render?action=TEMPLATE` with `text`, `dates` (local times, no `Z`), `details` and `recur=RRULE:FREQ=DAILY`. It opens Google Calendar with the event pre-filled; the user just taps Save.
 - With one time, one button ("Add reminders to my calendar"); with 2 or 3 times, one button per time ("Aggiungi le 10:00", "Aggiungi le 18:00"…).
-- Google's link can't set the alert, and Google applies its own default (30 minutes before). So under the button(s), one plain line: IT *Prima di salvare, imposta la notifica su ‘All'ora dell'evento’.* · EN *Before saving, set the notification to ‘At time of event’.*
+- Google's link can't set the alert, and Google applies its own default (30 minutes before). So **above** the button(s), a short 2-step guide in the same quiet style (a one-line hint under the buttons was easy to miss):
+  - IT: *1. Tocca il pulsante: si apre Google Calendar. 2. Prima di salvare, tocca ‘30 minuti prima’ e scegli ‘All'ora dell'evento’.*
+  - EN: *1. Tap the button: Google Calendar opens. 2. Before saving, tap ‘30 minutes before’ and choose ‘At time of event’.*
+  - With 2 or 3 buttons, step 1 reads *Tocca un pulsante alla volta* / *Tap each button in turn*.
 
 **On iPhone and other devices**, the button generates an `.ics` file in the browser (Blob download, nothing leaves the device):
 
