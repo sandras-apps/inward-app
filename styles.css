@@ -1,0 +1,461 @@
+/* Inward — calm, serif, lots of space. Italic instead of bold. */
+
+@font-face {
+  font-family: "Fraunces";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("fonts/fraunces-latin-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Fraunces";
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("fonts/fraunces-latin-italic.woff2") format("woff2");
+}
+
+:root {
+  /* Palette */
+  --teal-night: #1F3A4A;
+  --sage: #8FA89B;
+  --lavender: #A99BC4;
+  --cream: #F4F0E8;
+
+  /* Light phases: text in deep teal on softly tinted cream */
+  --ink-light: #1F3A4A;
+  --ink-soft-light: #3D5664;
+
+  /* Dark phases: text in cream on deep backgrounds */
+  --ink-dark: #F4F0E8;
+  --ink-soft-dark: #CDD3D0;
+
+  /* Defaults (overridden per phase below) */
+  --bg-top: #EEF0E6;
+  --bg-bottom: #D9E4DC;
+  --ink: var(--ink-light);
+  --ink-soft: var(--ink-soft-light);
+  --accent: #4C675B;
+
+  --serif: "Fraunces", "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --fade: 1.4s;
+}
+
+/* The background follows the time of day.
+   morning: greener · afternoon: bluer · evening: violet · night: deep teal */
+html[data-phase="morning"] {
+  --bg-top: #EEF0E6;
+  --bg-bottom: #D9E4DC;
+  --accent: #4C675B;
+}
+
+html[data-phase="afternoon"] {
+  --bg-top: #EEF0EE;
+  --bg-bottom: #D5E1E8;
+  --accent: #3D5C6E;
+}
+
+html[data-phase="evening"] {
+  --bg-top: #EFEBEE;
+  --bg-bottom: #DED7EA;
+  --accent: #5A4D78;
+}
+
+html[data-phase="night"] {
+  --bg-top: #1F3A4A;
+  --bg-bottom: #13242F;
+  --ink: var(--ink-dark);
+  --ink-soft: var(--ink-soft-dark);
+  --accent: #C9BFE0;
+}
+
+/* Dark system theme: every phase stays deep, only the tint changes */
+@media (prefers-color-scheme: dark) {
+  html[data-phase] {
+    --ink: var(--ink-dark);
+    --ink-soft: var(--ink-soft-dark);
+  }
+  html[data-phase="morning"] {
+    --bg-top: #20403F;
+    --bg-bottom: #172E30;
+    --accent: #B9CDC2;
+  }
+  html[data-phase="afternoon"] {
+    --bg-top: #1F3A4A;
+    --bg-bottom: #162B38;
+    --accent: #B7CBD6;
+  }
+  html[data-phase="evening"] {
+    --bg-top: #302E4C;
+    --bg-bottom: #1F2236;
+    --accent: #CFC5E6;
+  }
+  html[data-phase="night"] {
+    --bg-top: #1A3240;
+    --bg-bottom: #101E28;
+    --accent: #C9BFE0;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background-color: var(--bg-bottom);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-weight: 350;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  transition: color 2s ease;
+}
+
+/* A fixed layer for the gradient (background-attachment: fixed is unreliable on iOS) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* Layout */
+
+.screen {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding:
+    max(3rem, env(safe-area-inset-top))
+    max(1.5rem, env(safe-area-inset-right))
+    max(2rem, env(safe-area-inset-bottom))
+    max(1.5rem, env(safe-area-inset-left));
+}
+
+.column {
+  width: 100%;
+  max-width: 34rem;
+  margin: 0 auto;
+}
+
+#settings,
+#setup {
+  justify-content: flex-start;
+}
+
+/* Welcome */
+
+.welcome-text {
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.35rem, 1rem + 1.6vw, 1.75rem);
+  line-height: 1.55;
+  margin: 0 0 2.5rem;
+  animation: fade-in var(--fade) ease both;
+}
+
+/* Today */
+
+.today {
+  text-align: center;
+}
+
+.prompt-block {
+  margin-bottom: 2.25rem;
+}
+
+.category {
+  margin: 0 0 1.5rem;
+  font-size: 0.8125rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.prompt {
+  margin: 0;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.75rem, 1.1rem + 3.4vw, 2.85rem);
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+.fade-in {
+  animation: fade-in var(--fade) ease both;
+}
+
+.invitation {
+  margin: 0 auto 2.75rem;
+  max-width: 26rem;
+  font-style: italic;
+  color: var(--ink-soft);
+  text-wrap: balance;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  padding-top: 2rem;
+}
+
+#today {
+  justify-content: space-between;
+}
+
+#today .today {
+  margin: auto;
+}
+
+/* Text: headings in italic, never bold */
+
+.screen-title {
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.75rem, 1.3rem + 2vw, 2.25rem);
+  line-height: 1.25;
+  margin: 0 0 0.75rem;
+}
+
+.setting-title {
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.15rem;
+  margin: 0 0 0.75rem;
+  padding: 0;
+}
+
+.quiet {
+  color: var(--ink-soft);
+  margin: 0.75rem 0 0;
+}
+
+.note:empty {
+  display: none;
+}
+
+.setting {
+  border: 0;
+  margin: 0;
+  padding: 1.75rem 0 0;
+  min-width: 0;
+}
+
+/* Legends sit in the fieldset border by default; float them back into the flow */
+legend.setting-title {
+  float: left;
+  width: 100%;
+}
+
+legend.setting-title + * {
+  clear: both;
+}
+
+.choices {
+  margin: 0;
+}
+
+/* Controls */
+
+.button {
+  font: inherit;
+  font-style: italic;
+  font-size: 1.0625rem;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  padding: 0.7rem 1.6rem;
+  min-height: 2.75rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: color-mix(in srgb, var(--ink) 8%, transparent);
+}
+
+.link {
+  font: inherit;
+  font-style: italic;
+  color: var(--ink);
+  background: none;
+  border: 0;
+  padding: 0.5rem 0;
+  min-height: 2.75rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3em;
+  text-decoration-color: color-mix(in srgb, var(--ink) 45%, transparent);
+}
+
+.link:hover {
+  text-decoration-color: currentColor;
+}
+
+.link.small {
+  font-size: 0.9375rem;
+  color: var(--ink-soft);
+}
+
+.button:focus-visible,
+.link:focus-visible,
+.option input:focus-visible + span,
+.time input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  padding-top: 2.5rem;
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.option {
+  position: relative;
+  cursor: pointer;
+}
+
+.option input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.option span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0.4rem 1.1rem;
+  border: 1px solid color-mix(in srgb, var(--ink) 35%, transparent);
+  border-radius: 999px;
+  color: var(--ink-soft);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.option input:checked + span {
+  border-color: var(--ink);
+  color: var(--ink);
+  font-style: italic;
+  background-color: color-mix(in srgb, var(--ink) 9%, transparent);
+}
+
+.times {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.time {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 20rem;
+}
+
+.time span {
+  color: var(--ink-soft);
+}
+
+.time input {
+  font: inherit;
+  font-size: 1.0625rem;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ink) 35%, transparent);
+  border-radius: 0.6rem;
+  padding: 0.45rem 0.7rem;
+  min-height: 2.75rem;
+  color-scheme: light;
+}
+
+html[data-phase="night"] .time input {
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  .time input {
+    color-scheme: dark;
+  }
+}
+
+noscript p {
+  padding: 3rem 1.5rem;
+}
+
+/* Motion */
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(0.4rem); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Larger screens: a little more air */
+
+@media (min-width: 48rem) {
+  body {
+    font-size: 1.125rem;
+  }
+  .screen {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+  .prompt-block {
+    margin-bottom: 2.75rem;
+  }
+}

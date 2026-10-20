@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Inward</title>
+  <meta name="description" content="One journal prompt at a time, to answer on paper, in your own notebook.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#1F3A4A">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Inward">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="preload" href="fonts/fraunces-latin-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1 class="visually-hidden">Inward</h1>
+
+  <!-- Welcome: first launch only, re-readable from Settings -->
+  <main id="welcome" class="screen" hidden>
+    <div class="column">
+      <p class="welcome-text" data-i18n="welcome"></p>
+      <button type="button" class="button" id="welcome-continue" data-i18n="continue"></button>
+    </div>
+  </main>
+
+  <!-- Setup: language, prompts per day, times. Can be skipped. -->
+  <main id="setup" class="screen" hidden>
+    <div class="column">
+      <h2 class="screen-title" data-i18n="setupTitle"></h2>
+      <p class="quiet" data-i18n="setupNote"></p>
+      <form class="choices" data-choices></form>
+      <div class="actions">
+        <button type="button" class="button" id="setup-start" data-i18n="start"></button>
+        <button type="button" class="link" id="setup-skip" data-i18n="skip"></button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Today's prompt -->
+  <main id="today" class="screen" hidden>
+    <div class="column today">
+      <div class="prompt-block" aria-live="polite">
+        <p class="category" id="prompt-category"></p>
+        <p class="prompt" id="prompt-text"></p>
+      </div>
+      <p class="invitation" data-i18n="invitation"></p>
+      <button type="button" class="link" id="another" data-i18n="another"></button>
+    </div>
+    <nav class="footer">
+      <button type="button" class="link small" id="open-settings" data-i18n="settings"></button>
+    </nav>
+  </main>
+
+  <!-- Settings -->
+  <main id="settings" class="screen" hidden>
+    <div class="column">
+      <h2 class="screen-title" data-i18n="settings"></h2>
+      <form class="choices" data-choices></form>
+
+      <section class="setting">
+        <h3 class="setting-title" data-i18n="remindersTitle"></h3>
+        <button type="button" class="button" id="add-calendar" data-i18n="addCalendar"></button>
+        <p class="quiet" data-i18n="calendarHelp"></p>
+        <p class="quiet note" id="calendar-status" role="status"></p>
+      </section>
+
+      <section class="setting">
+        <button type="button" class="link" id="reread-welcome" data-i18n="rereadWelcome"></button>
+      </section>
+
+      <section class="setting">
+        <h3 class="setting-title" data-i18n="aboutTitle"></h3>
+        <p class="quiet" data-i18n="about"></p>
+      </section>
+
+      <div class="actions">
+        <button type="button" class="link" id="close-settings" data-i18n="back"></button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Shared form for language, prompts per day and times (cloned into setup and settings) -->
+  <template id="choices-template">
+    <fieldset class="setting">
+      <legend class="setting-title" data-i18n="language"></legend>
+      <div class="options">
+        <label class="option"><input type="radio" name="lang" value="it"><span>Italiano</span></label>
+        <label class="option"><input type="radio" name="lang" value="en"><span>English</span></label>
+      </div>
+    </fieldset>
+    <fieldset class="setting">
+      <legend class="setting-title" data-i18n="perDay"></legend>
+      <div class="options">
+        <label class="option"><input type="radio" name="perDay" value="1"><span>1</span></label>
+        <label class="option"><input type="radio" name="perDay" value="2"><span>2</span></label>
+        <label class="option"><input type="radio" name="perDay" value="3"><span>3</span></label>
+      </div>
+    </fieldset>
+    <fieldset class="setting">
+      <legend class="setting-title" data-i18n="times"></legend>
+      <div class="times" data-times></div>
+    </fieldset>
+  </template>
+
+  <noscript>
+    <p class="column quiet">Inward needs JavaScript to show your prompt.</p>
+  </noscript>
+
+  <script src="app.js"></script>
+</body>
+</html>
