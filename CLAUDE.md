@@ -24,7 +24,7 @@ prompts.json          ← provided, 140 prompts in IT/EN (do not rewrite them)
 manifest.webmanifest
 sw.js                 ← service worker, offline cache of all app files
 fonts/                ← self-hosted serif font files (OFL licence)
-icons/                ← app icons (placeholders for now)
+icons/                ← app icons, generated from icons/source.png (arched doorway)
 README.md
 ```
 

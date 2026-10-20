@@ -32,7 +32,7 @@ then open http://localhost:8000.
 | `sw.js` | Service worker that keeps a copy of the app for offline use |
 | `manifest.webmanifest` | Lets phones install Inward like an app |
 | `fonts/` | Fraunces, self-hosted (SIL Open Font License, see `fonts/OFL.txt`) |
-| `icons/` | App icons (placeholders for now) |
+| `icons/` | App icons and favicons, all made from `icons/source.png` (the doorway) |
 
 ## Updating the app
 
