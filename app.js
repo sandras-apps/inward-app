@@ -329,7 +329,7 @@
 
     settings.times.forEach(function (time, i) {
       var start = minutesOf(time);
-      var end = start + 10;
+      var end = start + 30; // long enough not to rush anyone
       var endTime = pad(Math.floor(end / 60) % 24) + pad(end % 60) + "00";
       var endDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + (end >= 1440 ? 1 : 0));
       lines.push(
