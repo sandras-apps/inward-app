@@ -28,6 +28,8 @@
       remindersTitle: "Promemoria",
       addCalendar: "Aggiungi i promemoria al mio calendario",
       calendarHelp: "Il promemoria arriva dal calendario del telefono: toccalo per aprire Inward. Per cambiare gli orari, elimina il vecchio evento Inward dal calendario e aggiungi quello nuovo.",
+      addTime: "Aggiungi le {time}",
+      calendarAndroidNote: "Prima di salvare, imposta la notifica su ‘All'ora dell'evento’.",
       calendarReady: "File pronto: apri il file scaricato e scegli la tua app Calendario.",
       calendarDescription: "Un momento per te. Prendi il quaderno e apri Inward.",
       remindersStepTitle: "Un promemoria, se vuoi",
@@ -65,6 +67,8 @@
       remindersTitle: "Reminders",
       addCalendar: "Add reminders to my calendar",
       calendarHelp: "The reminder comes from your phone's calendar: tap it to open Inward. To change the times, delete the old Inward event from your calendar and add the new one.",
+      addTime: "Add {time}",
+      calendarAndroidNote: "Before saving, set the notification to ‘At time of event’.",
       calendarReady: "File ready: open the downloaded file and choose your Calendar app.",
       calendarDescription: "A moment for yourself. Take your notebook and open Inward.",
       remindersStepTitle: "A reminder, if you like",
@@ -262,7 +266,38 @@
   }
 
   // ---------------------------------------------------------------------------
-  // Calendar reminders: an .ics file made here, in the browser. Nothing is sent.
+  // Calendar reminders. On Android: one Google Calendar "add event" link per time,
+  // so the event opens pre-filled. Elsewhere: an .ics file made here, in the browser.
+
+  var EVENT_MINUTES = 30; // long enough not to rush anyone
+
+  function isAndroid() {
+    return /Android/i.test(navigator.userAgent);
+  }
+
+  // Start and end of today's event at this time, as local "YYYYMMDDTHHMMSS".
+  function eventTimes(now, time) {
+    var start = minutesOf(time);
+    var end = start + EVENT_MINUTES;
+    var endDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + (end >= 1440 ? 1 : 0));
+    return {
+      start: icsDate(now) + "T" + time.replace(":", "") + "00",
+      end: icsDate(endDay) + "T" + pad(Math.floor(end / 60) % 24) + pad(end % 60) + "00"
+    };
+  }
+
+  // Google's add-event link can't set the alert; the note under the button explains that.
+  function googleCalendarLink(time) {
+    var times = eventTimes(new Date(), time);
+    var params = new URLSearchParams({
+      action: "TEMPLATE",
+      text: "Inward",
+      dates: times.start + "/" + times.end,
+      details: STRINGS[settings.lang].calendarDescription + "\n" + appURL(),
+      recur: "RRULE:FREQ=DAILY"
+    });
+    return "https://calendar.google.com/calendar/render?" + params.toString();
+  }
 
   function icsEscape(text) {
     return String(text)
@@ -328,10 +363,7 @@
     ];
 
     settings.times.forEach(function (time, i) {
-      var start = minutesOf(time);
-      var end = start + 30; // long enough not to rush anyone
-      var endTime = pad(Math.floor(end / 60) % 24) + pad(end % 60) + "00";
-      var endDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + (end >= 1440 ? 1 : 0));
+      var times = eventTimes(now, time);
       lines.push(
         "BEGIN:VEVENT",
         "UID:inward-reminder-" + (i + 1) + "@sandras-apps.github.io",
@@ -339,13 +371,14 @@
         "LAST-MODIFIED:" + stamp,
         "SEQUENCE:" + sequence,
         // Floating local time (no time zone): the reminder follows the phone's clock.
-        "DTSTART:" + icsDate(now) + "T" + time.replace(":", "") + "00",
-        "DTEND:" + icsDate(endDay) + "T" + endTime,
+        "DTSTART:" + times.start,
+        "DTEND:" + times.end,
         "RRULE:FREQ=DAILY",
         "SUMMARY:Inward",
         "DESCRIPTION:" + icsEscape(t.calendarDescription + "\n" + url),
         "URL:" + url,
         "TRANSP:TRANSPARENT",
+        // Apple Calendar honours this alert; Google Calendar ignores it.
         "BEGIN:VALARM",
         "ACTION:DISPLAY",
         "DESCRIPTION:Inward",
@@ -371,10 +404,60 @@
     $all(".calendar-status").forEach(function (el) {
       el.textContent = STRINGS[settings.lang].calendarReady;
     });
-    // In the setup step, "Not now" becomes "Continue" once the file is made.
+    reminderAdded();
+  }
+
+  // In the setup step, "Not now" becomes "Continue" once a reminder is on its way.
+  function reminderAdded() {
     var done = $("#reminders-done");
     done.setAttribute("data-i18n", "continue");
     done.textContent = STRINGS[settings.lang].continue;
+  }
+
+  // Before making a reminder, take the times as they are in Settings right now.
+  function syncTimesFromSettings() {
+    if (!$("#settings").hidden) {
+      readTimes($("#settings [data-choices]"));
+      saveSettings();
+    }
+  }
+
+  function renderCalendarActions() {
+    var t = STRINGS[settings.lang];
+    var android = isAndroid();
+    $all(".calendar-actions").forEach(function (box) {
+      box.textContent = "";
+      if (!android) {
+        var button = document.createElement("button");
+        button.type = "button";
+        button.className = "button";
+        button.textContent = t.addCalendar;
+        button.addEventListener("click", function () {
+          syncTimesFromSettings();
+          tidyTimes();
+          downloadCalendar();
+        });
+        box.appendChild(button);
+        return;
+      }
+      settings.times.forEach(function (time, i) {
+        var link = document.createElement("a");
+        link.className = "button";
+        link.target = "_blank";
+        link.rel = "noopener";
+        link.textContent = settings.perDay === 1 ? t.addCalendar : t.addTime.replace("{time}", time);
+        link.href = googleCalendarLink(time);
+        link.addEventListener("click", function () {
+          syncTimesFromSettings();
+          link.href = googleCalendarLink(settings.times[i]);
+          reminderAdded();
+        });
+        box.appendChild(link);
+      });
+    });
+    $all(".calendar-android-note").forEach(function (el) {
+      el.hidden = !android;
+    });
   }
 
   // ---------------------------------------------------------------------------
@@ -492,6 +575,7 @@
         times.appendChild(label);
       });
     });
+    renderCalendarActions();
   }
 
   function onChoiceChange(event) {
@@ -511,6 +595,7 @@
       if (!isTime(input.value)) return;
       settings.times[Number(input.getAttribute("data-slot"))] = input.value;
       saveSettings();
+      renderCalendarActions();
       shown = null;
     }
     $all(".calendar-status").forEach(function (el) {
@@ -637,16 +722,6 @@
     });
     $("#reread-welcome").addEventListener("click", function () {
       showScreen("welcome");
-    });
-    $all(".add-calendar").forEach(function (button) {
-      button.addEventListener("click", function () {
-        if (!$("#settings").hidden) {
-          readTimes($("#settings [data-choices]"));
-          saveSettings();
-        }
-        tidyTimes();
-        downloadCalendar();
-      });
     });
 
     // Keep the prompt and colours current if the app stays open across a time slot or midnight.
