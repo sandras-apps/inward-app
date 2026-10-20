@@ -28,7 +28,7 @@
       remindersTitle: "Promemoria",
       addCalendar: "Aggiungi i promemoria al mio calendario",
       calendarHelp: "Il promemoria arriva dal calendario del telefono: toccalo per aprire Inward. Per cambiare gli orari, elimina il vecchio evento Inward dal calendario e aggiungi quello nuovo.",
-      calendarReady: "File pronto. Aprilo per aggiungerlo al tuo calendario.",
+      calendarReady: "File pronto: apri il file scaricato e scegli la tua app Calendario.",
       calendarDescription: "Un momento per te. Prendi il quaderno e apri Inward.",
       remindersStepTitle: "Un promemoria, se vuoi",
       remindersStepText: {
@@ -65,7 +65,7 @@
       remindersTitle: "Reminders",
       addCalendar: "Add reminders to my calendar",
       calendarHelp: "The reminder comes from your phone's calendar: tap it to open Inward. To change the times, delete the old Inward event from your calendar and add the new one.",
-      calendarReady: "File ready. Open it to add it to your calendar.",
+      calendarReady: "File ready: open the downloaded file and choose your Calendar app.",
       calendarDescription: "A moment for yourself. Take your notebook and open Inward.",
       remindersStepTitle: "A reminder, if you like",
       remindersStepText: {
