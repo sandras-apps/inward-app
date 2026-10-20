@@ -1,11 +1,24 @@
 # Inward
 
+**[Open Inward →](https://sandras-apps.github.io/inward-app/)**
+
+*A quiet pause in a loud world. One journal prompt at a time, to answer on paper.*
+
 A free, quiet web app that offers one journal prompt at a time, for you to answer **on paper**, in your own notebook. A small reflective pause in the day instead of doomscrolling.
 
 - 140 prompts in Italian and English, across seven themes.
-- 1, 2 or 3 prompts a day, at the times you choose.
+- One prompt a day by default, or up to three, at the times you choose.
 - Reminders come through your own phone calendar: Inward makes a small calendar file you add once. There are no push notifications.
 - Works offline and can be installed on your phone's home screen.
+
+## Install it on your phone
+
+Inward is a web page you can keep on your home screen like an app. After the first visit it also works offline.
+
+- **Android (Chrome):** open the link above, tap the menu **⋮**, then **Install app** (on some phones it says **Add to Home screen**).
+- **iPhone (Safari):** open the link above, tap **Share**, then **Add to Home Screen**.
+
+Installing doesn't add notifications: reminders still come from your phone calendar, if you choose to add them.
 
 ## Privacy
 
