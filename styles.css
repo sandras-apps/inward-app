@@ -268,6 +268,14 @@ body::before {
   display: none;
 }
 
+.install-setup {
+  padding-top: 1.5rem;
+}
+
+.install-ios {
+  font-style: italic;
+}
+
 #settings [data-setup-only] {
   display: none;
 }

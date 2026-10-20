@@ -51,6 +51,11 @@
       </div>
       <p class="quiet note calendar-status" role="status"></p>
       <p class="quiet" data-i18n="remindersStepHelp"></p>
+      <!-- Shown only where installing is possible and the app isn't installed yet -->
+      <div class="install install-setup" hidden>
+        <button type="button" class="link install-button" data-i18n="install" hidden></button>
+        <p class="quiet install-ios" data-i18n="installIos" hidden></p>
+      </div>
       <div class="actions">
         <button type="button" class="link" id="reminders-done" data-i18n="notNow"></button>
       </div>
@@ -83,6 +88,11 @@
         <button type="button" class="button add-calendar" data-i18n="addCalendar"></button>
         <p class="quiet" data-i18n="calendarHelp"></p>
         <p class="quiet note calendar-status" role="status"></p>
+      </section>
+
+      <section class="setting install" hidden>
+        <button type="button" class="link install-button" data-i18n="install" hidden></button>
+        <p class="quiet install-ios" data-i18n="installIos" hidden></p>
       </section>
 
       <section class="setting">

@@ -37,6 +37,8 @@
       },
       remindersStepHelp: "Se un giorno cambi gli orari, trovi questo pulsante anche nelle impostazioni.",
       notNow: "Non ora",
+      install: "Installa l'app",
+      installIos: "Per installare l'app: tocca Condividi, poi ‘Aggiungi alla schermata Home’.",
       rereadWelcome: "Rileggi il benvenuto",
       aboutTitle: "Informazioni e privacy",
       about: "Inward è gratuita e non raccoglie nessun dato: niente account, niente tracciamento, niente cookie. Le tue impostazioni restano solo su questo dispositivo. I promemoria vivono nel tuo calendario, non qui. E quello che scrivi resta sulla carta.",
@@ -72,6 +74,8 @@
       },
       remindersStepHelp: "If you change the times later, you'll find this button in Settings too.",
       notNow: "Not now",
+      install: "Install the app",
+      installIos: "To install the app: tap Share, then ‘Add to Home Screen’.",
       rereadWelcome: "Re-read the welcome",
       aboutTitle: "About & privacy",
       about: "Inward is free and collects no data: no accounts, no tracking, no cookies. Your settings stay on this device only. Reminders live in your own calendar, not here. And what you write stays on paper.",
@@ -550,6 +554,59 @@
   }
 
   // ---------------------------------------------------------------------------
+  // Installing: Chrome on Android offers a prompt the app can open; iPhone has
+  // none, so there we only say how. Nothing shows once the app is installed.
+
+  var installPrompt = null;
+
+  function isInstalled() {
+    return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+      navigator.standalone === true;
+  }
+
+  function isIOS() {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  }
+
+  function renderInstall() {
+    var installed = isInstalled();
+    var canPrompt = !installed && installPrompt !== null;
+    var ios = !installed && !canPrompt && isIOS();
+    $all(".install").forEach(function (el) {
+      el.hidden = !(canPrompt || ios);
+      $(".install-button", el).hidden = !canPrompt;
+      $(".install-ios", el).hidden = !ios;
+    });
+  }
+
+  function bindInstall() {
+    window.addEventListener("beforeinstallprompt", function (event) {
+      event.preventDefault(); // no automatic banner: only our quiet link
+      installPrompt = event;
+      renderInstall();
+    });
+    window.addEventListener("appinstalled", function () {
+      installPrompt = null;
+      renderInstall();
+    });
+    if (window.matchMedia) {
+      var standalone = window.matchMedia("(display-mode: standalone)");
+      if (standalone.addEventListener) standalone.addEventListener("change", renderInstall);
+    }
+    $all(".install-button").forEach(function (button) {
+      button.addEventListener("click", function () {
+        if (!installPrompt) return;
+        var prompt = installPrompt;
+        installPrompt = null; // each prompt can only be used once
+        prompt.prompt();
+        renderInstall();
+      });
+    });
+    renderInstall();
+  }
+
+  // ---------------------------------------------------------------------------
   // Start
 
   function bindEvents() {
@@ -622,6 +679,7 @@
     applyPhase();
     applyLanguage();
     bindEvents();
+    bindInstall();
     showScreen(settings.welcomed ? "today" : "welcome");
 
     loadPrompts().then(function () {
