@@ -80,7 +80,7 @@ PWAs can't schedule local notifications at fixed times without a server, and we 
 - The **Add reminders to my calendar** button generates an `.ics` file in the browser (Blob download, nothing leaves the device).
 - One `VEVENT` per chosen time, `RRULE:FREQ=DAILY`, duration 10 minutes, a `VALARM` (`TRIGGER:PT0M`, `ACTION:DISPLAY`) at the start time.
 - Use floating local times (no `TZID`), so the reminder follows the user's local clock.
-- Event title: `Inward ✦`. Description: one gentle line in the user's language plus the app URL. Also set the `URL` field.
+- Event title: `Inward`. Description: one gentle line in the user's language plus the app URL. Also set the `URL` field.
 - Stable `UID`s per slot, so re-importing doesn't create confusing duplicates where calendars support that.
 - Next to the button, explain in one or two plain lines: the reminder opens the calendar, tap it to open Inward; to change times, delete the old Inward event from the calendar and add the new one.
 - Test that the file imports correctly on Android (Google Calendar) and iPhone (Apple Calendar).
