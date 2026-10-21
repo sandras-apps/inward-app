@@ -600,6 +600,12 @@
     $all(".screen").forEach(function (el) {
       el.hidden = el.id !== id;
     });
+    // Keep the open screen in the address (#settings…), so a reload reopens it.
+    try {
+      history.replaceState(null, "", id === "today" ? location.pathname + location.search : "#" + id);
+    } catch (e) {
+      // Not allowed in some sandboxed views: a reload then simply starts on the prompt.
+    }
     window.scrollTo(0, 0);
     // Redraw the form each time, so it always shows what is saved
     // (a time changed during setup must also appear in Settings).
@@ -845,12 +851,21 @@
       });
   }
 
+  function firstScreen() {
+    var saved = location.hash.slice(1);
+    if (!settings.welcomed) return saved === "setup" ? "setup" : "welcome";
+    var screens = ["welcome", "reminders", "settings"];
+    return screens.indexOf(saved) !== -1 ? saved : "today";
+  }
+
   function start() {
     applyPhase();
     applyLanguage();
     bindEvents();
     bindInstall();
-    showScreen(settings.welcomed ? "today" : "welcome");
+    // After a reload, start at the top of the screen that was open.
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    showScreen(firstScreen());
 
     loadPrompts().then(function () {
       if (!$("#today").hidden) renderPrompt(true);

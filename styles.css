@@ -104,6 +104,12 @@ html[data-phase="night"] {
   box-sizing: border-box;
 }
 
+/* No pull-to-refresh: a reload mid-way is never what the user meant */
+html,
+body {
+  overscroll-behavior-y: contain;
+}
+
 html {
   min-height: 100%;
   background-color: var(--bg-bottom);
@@ -113,8 +119,6 @@ html {
 
 body {
   margin: 0;
-  min-height: 100vh;
-  min-height: 100dvh;
   color: var(--ink);
   font-family: var(--serif);
   font-weight: 350;
