@@ -120,7 +120,14 @@ Test on Android (Google Calendar) and iPhone (Apple Calendar).
   - Sage green `#8FA89B`
   - Dusty lavender `#A99BC4`
   - Cream `#F4F0E8`
-- The background gently shifts with the time of day: greener in the morning, bluer in the afternoon, violet towards evening (dark, deep-teal base at night). Keep text contrast accessible (WCAG AA) in every state.
+- **Each category has its own colour**, used for the category name and for a soft gradient tint of the prompt screen's background (never flat colour). Base accents: Emotions dusty lavender `#A99BC4`, Relationships antique rose `#C49A9F`, Memory soft ochre `#C8A96A`, Longing misty blue `#8FAAC4`, Gratitude sage green `#8FA89B`, Fears slate blue-grey `#7F8FA3`, Identity sea green `#7FB0A8`.
+  - Light mode: pale creamy backgrounds tinted with the accent; prompt text deep teal; the category name in a darker shade of the accent.
+  - Dark mode: deep, muted backgrounds tinted with the accent; prompt text cream; the category name in a lighter shade of the accent.
+  - The exact shades live in `styles.css` (`html[data-category="…"]`), adjusted so every pairing passes WCAG AA (text, soft text and category name, on both ends of the gradient).
+  - Settings, the welcome, the setup and the reminder step use a neutral look (no category): cream in light mode, deep teal in dark mode.
+  - When the prompt changes, the colours fade gently to the new ones (registered CSS colour properties, about 1.6 s); no fade with `prefers-reduced-motion`, and none on the first paint.
+- **Warm night mode, 21:00–05:00.** One fixed warm palette with no blue light replaces the category colours, on every screen and in both phone modes: background `#2A2019` → `#1E1712`, text `#EADBC4`, soft text `#CDB89C`, category name `#C9A06A`. It switches automatically at 21:00 and 05:00, also while the app is open (the per-minute check), with a slow fade (about 6 s).
+- The `theme-color` meta tag follows the current background, so the phone's status bar matches.
 - Respect `prefers-reduced-motion` and `prefers-color-scheme`.
 - Mobile-first; it should also look good on desktop.
 - Soft fade when the prompt appears. No other animations needed.
@@ -130,7 +137,8 @@ Test on Android (Google Calendar) and iPhone (Apple Calendar).
 
 - Pull-to-refresh is disabled (`overscroll-behavior-y: contain` on `html` and `body`).
 - Settings, and the welcome re-read from Settings, are pushed onto the browser history, so the Android back gesture/button goes back a screen (welcome → Settings → prompt) instead of closing the app. The app's own back links go back through the history the same way.
-- The open screen is kept in the URL hash (`#settings`, `#welcome`, `#reminders`; the prompt screen has none), so a reload reopens the same screen, scrolled to the top. A new user who hasn't finished the welcome always starts there (or back in the setup step).
+- Any reload, including the one from the update link, reopens exactly the screen that was open (Settings, welcome, setup, reminder step or prompt), scrolled to the top.
+- The open screen is kept in the URL hash (`#settings`, `#welcome`, `#setup`, `#reminders`; the prompt screen has none), so a reload reopens the same screen, scrolled to the top. A new user who hasn't finished the welcome always starts there (or back in the setup step).
 
 ## Updates
 

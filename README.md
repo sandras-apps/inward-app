@@ -39,7 +39,7 @@ then open http://localhost:8000.
 | File | What it does |
 | --- | --- |
 | `index.html` | The screens: welcome, first setup, today's prompt, settings |
-| `styles.css` | Look and feel, including the background that follows the time of day |
+| `styles.css` | Look and feel: a colour for each category, a neutral look elsewhere, and a warm night palette from 21:00 to 05:00 |
 | `app.js` | Chooses the daily prompt, saves settings, makes the calendar file |
 | `prompts.json` | The 140 prompts and the theme names, in Italian and English |
 | `sw.js` | Service worker that keeps a copy of the app for offline use |
