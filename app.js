@@ -227,14 +227,6 @@
     return dateKey(period.day) + "#" + period.slot + "#" + settings.perDay;
   }
 
-  function phaseOf(d) {
-    var h = d.getHours();
-    if (h >= 5 && h < 12) return "morning";
-    if (h >= 12 && h < 17) return "afternoon";
-    if (h >= 17 && h < 22) return "evening";
-    return "night";
-  }
-
   // ---------------------------------------------------------------------------
   // Choosing the prompt: deterministic, no randomness at runtime.
 
@@ -606,15 +598,38 @@
     renderChoices();
   }
 
-  function applyPhase() {
-    var phase = phaseOf(new Date());
+  // ---------------------------------------------------------------------------
+  // Colours (see styles.css). The prompt screen takes its category's colour;
+  // every other screen is neutral.
+
+  var promptCategory = ""; // category of the prompt on screen
+  var themeColorTimer = null;
+
+  function applyTheme() {
     var html = document.documentElement;
-    if (html.getAttribute("data-phase") !== phase) {
-      html.setAttribute("data-phase", phase);
-    }
+    var category = !$("#today").hidden ? promptCategory : "";
+    if (category) html.setAttribute("data-category", category);
+    else html.removeAttribute("data-category");
+
+    // Keep the phone's status bar on the background colour, now and once faded.
+    updateThemeColor();
+    clearTimeout(themeColorTimer);
+    themeColorTimer = setTimeout(updateThemeColor, 1700);
+  }
+
+  function updateThemeColor() {
     var meta = $('meta[name="theme-color"]');
-    var color = getComputedStyle(html).getPropertyValue("--bg-top").trim();
+    var color = getComputedStyle(document.documentElement).getPropertyValue("--bg-top").trim();
     if (meta && color) meta.setAttribute("content", color);
+  }
+
+  // Colours appear without a fade at first, then fade on every change.
+  function enableFades() {
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        document.documentElement.classList.remove("no-fade");
+      });
+    });
   }
 
   // how: "push" adds a step to the browser history (Settings, and the welcome
@@ -646,11 +661,16 @@
     // (a time changed during setup must also appear in Settings).
     if (id === "setup" || id === "settings") renderChoices();
     if (id === "today") renderPrompt();
+    applyTheme();
   }
 
   function renderPrompt(force) {
     if (!order.length) return;
     var prompt = promptFor(currentPeriod(new Date()));
+    if (prompt.category !== promptCategory) {
+      promptCategory = prompt.category;
+      applyTheme();
+    }
     var key = prompt.id + "|" + settings.lang;
     if (!force && key === shown) return;
     shown = key;
@@ -872,7 +892,7 @@
     // start of every minute (so a new prompt appears right at its time), and
     // whenever the app comes back to the foreground.
     function refresh() {
-      applyPhase();
+      applyTheme();
       if (!$("#today").hidden) renderPrompt();
     }
     function everyMinute() {
@@ -967,7 +987,7 @@
 
   function start() {
     migrateStorage();
-    applyPhase();
+    applyTheme();
     applyLanguage();
     bindEvents();
     bindInstall();
@@ -977,7 +997,11 @@
 
     loadPrompts().then(function () {
       if (!$("#today").hidden) renderPrompt(true);
-    }, showLoadError);
+      enableFades();
+    }, function () {
+      showLoadError();
+      enableFades();
+    });
 
     registerServiceWorker();
   }

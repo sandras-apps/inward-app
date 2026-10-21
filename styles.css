@@ -16,6 +16,13 @@
   src: url("fonts/fraunces-latin-italic.woff2") format("woff2");
 }
 
+/* Colours are registered so they can fade from one to the next */
+@property --bg-top { syntax: "<color>"; inherits: true; initial-value: #F4F0E8; }
+@property --bg-bottom { syntax: "<color>"; inherits: true; initial-value: #E2E4DD; }
+@property --ink { syntax: "<color>"; inherits: true; initial-value: #1F3A4A; }
+@property --ink-soft { syntax: "<color>"; inherits: true; initial-value: #3D5664; }
+@property --accent { syntax: "<color>"; inherits: true; initial-value: #4C675B; }
+
 :root {
   /* Palette */
   --teal-night: #1F3A4A;
@@ -23,78 +30,121 @@
   --lavender: #A99BC4;
   --cream: #F4F0E8;
 
-  /* Light phases: text in deep teal on softly tinted cream */
-  --ink-light: #1F3A4A;
-  --ink-soft-light: #3D5664;
-
-  /* Dark phases: text in cream on deep backgrounds */
-  --ink-dark: #F4F0E8;
-  --ink-soft-dark: #CDD3D0;
-
-  /* Defaults (overridden per phase below) */
-  --bg-top: #EEF0E6;
-  --bg-bottom: #D9E4DC;
-  --ink: var(--ink-light);
-  --ink-soft: var(--ink-soft-light);
+  /* Neutral look (Settings, welcome, setup), light mode */
+  --bg-top: #F4F0E8;
+  --bg-bottom: #E2E4DD;
+  --ink: #1F3A4A;
+  --ink-soft: #3D5664;
   --accent: #4C675B;
 
   --serif: "Fraunces", "Cormorant Garamond", Georgia, "Times New Roman", serif;
   --fade: 1.4s;
+
+  transition:
+    --bg-top 1.6s ease, --bg-bottom 1.6s ease, --accent 1.6s ease,
+    --ink 1.6s ease, --ink-soft 1.6s ease;
 }
 
-/* The background follows the time of day.
-   morning: greener · afternoon: bluer · evening: violet · night: deep teal */
-html[data-phase="morning"] {
-  --bg-top: #EEF0E6;
-  --bg-bottom: #D9E4DC;
-  --accent: #4C675B;
+/* No fade on the very first paint */
+html.no-fade {
+  transition: none;
 }
 
-html[data-phase="afternoon"] {
-  --bg-top: #EEF0EE;
-  --bg-bottom: #D5E1E8;
-  --accent: #3D5C6E;
+/* On the prompt screen, each category tints the background and colours its name.
+   Light mode: pale creamy backgrounds; the prompt stays deep teal.
+   All colours checked for WCAG AA contrast. */
+html[data-category="emotions"] {
+  --bg-top: #EAE4E3;
+  --bg-bottom: #DAD3DC;
+  --accent: #645189;
 }
 
-html[data-phase="evening"] {
-  --bg-top: #EFEBEE;
-  --bg-bottom: #DED7EA;
-  --accent: #5A4D78;
+html[data-category="relationships"] {
+  --bg-top: #EDE4DE;
+  --bg-bottom: #E4D3CF;
+  --accent: #834C53;
 }
 
-html[data-phase="night"] {
-  --bg-top: #1F3A4A;
-  --bg-bottom: #13242F;
-  --ink: var(--ink-dark);
-  --ink-soft: var(--ink-soft-dark);
-  --accent: #C9BFE0;
+html[data-category="memory"] {
+  --bg-top: #EEE6D6;
+  --bg-bottom: #E5D8BD;
+  --accent: #705829;
 }
 
-/* Dark system theme: every phase stays deep, only the tint changes */
+html[data-category="longing"] {
+  --bg-top: #E6E6E3;
+  --bg-bottom: #D2D8DC;
+  --accent: #405E7A;
+}
+
+html[data-category="gratitude"] {
+  --bg-top: #E6E6DD;
+  --bg-bottom: #D2D8CE;
+  --accent: #4A5F54;
+}
+
+html[data-category="fears"] {
+  --bg-top: #E4E2DE;
+  --bg-bottom: #CCCFD1;
+  --accent: #4A5767;
+}
+
+html[data-category="identity"] {
+  --bg-top: #E4E7DF;
+  --bg-bottom: #CCDAD2;
+  --accent: #3D635D;
+}
+
+/* Dark mode: deep, muted backgrounds tinted with the category; the prompt stays cream */
 @media (prefers-color-scheme: dark) {
-  html[data-phase] {
-    --ink: var(--ink-dark);
-    --ink-soft: var(--ink-soft-dark);
-  }
-  html[data-phase="morning"] {
-    --bg-top: #20403F;
-    --bg-bottom: #172E30;
+  :root {
+    --bg-top: #1F3A4A;
+    --bg-bottom: #13242F;
+    --ink: #F4F0E8;
+    --ink-soft: #D3D6D2;
     --accent: #B9CDC2;
   }
-  html[data-phase="afternoon"] {
-    --bg-top: #1F3A4A;
-    --bg-bottom: #162B38;
-    --accent: #B7CBD6;
+
+  html[data-category="emotions"] {
+    --bg-top: #424759;
+    --bg-bottom: #28313D;
+    --accent: #BFB5D3;
   }
-  html[data-phase="evening"] {
-    --bg-top: #302E4C;
-    --bg-bottom: #1F2236;
-    --accent: #CFC5E6;
+
+  html[data-category="relationships"] {
+    --bg-top: #4A474E;
+    --bg-bottom: #2B3139;
+    --accent: #D1B1B4;
   }
-  html[data-phase="night"] {
-    --bg-top: #1A3240;
-    --bg-bottom: #101E28;
-    --accent: #C9BFE0;
+
+  html[data-category="memory"] {
+    --bg-top: #4B4B3E;
+    --bg-bottom: #2B3333;
+    --accent: #D2B884;
+  }
+
+  html[data-category="longing"] {
+    --bg-top: #3A4C59;
+    --bg-bottom: #25333D;
+    --accent: #AABED2;
+  }
+
+  html[data-category="gratitude"] {
+    --bg-top: #3A4B4D;
+    --bg-bottom: #253338;
+    --accent: #ACBEB5;
+  }
+
+  html[data-category="fears"] {
+    --bg-top: #36434F;
+    --bg-bottom: #233039;
+    --accent: #A6B1BF;
+  }
+
+  html[data-category="identity"] {
+    --bg-top: #364D50;
+    --bg-bottom: #23343A;
+    --accent: #9BC2BB;
   }
 }
 
@@ -126,7 +176,6 @@ body {
   line-height: 1.6;
   font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
-  transition: color 2s ease;
 }
 
 /* A fixed layer for the gradient (background-attachment: fixed is unreliable on iOS) */
@@ -498,10 +547,6 @@ legend.setting-title + * {
   padding: 0.45rem 0.7rem;
   min-height: 2.75rem;
   color-scheme: light;
-}
-
-html[data-phase="night"] .time input {
-  color-scheme: dark;
 }
 
 @media (prefers-color-scheme: dark) {
