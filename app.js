@@ -600,21 +600,38 @@
 
   // ---------------------------------------------------------------------------
   // Colours (see styles.css). The prompt screen takes its category's colour;
-  // every other screen is neutral.
+  // every other screen is neutral. From 21:00 to 05:00 one warm night palette,
+  // with no blue light, replaces everything, on every screen.
 
   var promptCategory = ""; // category of the prompt on screen
   var themeColorTimer = null;
+  var slowFadeTimer = null;
+
+  function isNight(d) {
+    var h = d.getHours();
+    return h >= 21 || h < 5;
+  }
 
   function applyTheme() {
     var html = document.documentElement;
+    var night = isNight(new Date());
     var category = !$("#today").hidden ? promptCategory : "";
+    if (night !== html.hasAttribute("data-night") && !html.classList.contains("no-fade")) {
+      // Into or out of the night: a slow fade.
+      html.classList.add("slow-fade");
+      clearTimeout(slowFadeTimer);
+      slowFadeTimer = setTimeout(function () {
+        html.classList.remove("slow-fade");
+      }, 6500);
+    }
+    html.toggleAttribute("data-night", night);
     if (category) html.setAttribute("data-category", category);
     else html.removeAttribute("data-category");
 
     // Keep the phone's status bar on the background colour, now and once faded.
     updateThemeColor();
     clearTimeout(themeColorTimer);
-    themeColorTimer = setTimeout(updateThemeColor, 1700);
+    themeColorTimer = setTimeout(updateThemeColor, html.classList.contains("slow-fade") ? 6200 : 1700);
   }
 
   function updateThemeColor() {

@@ -45,6 +45,11 @@
     --ink 1.6s ease, --ink-soft 1.6s ease;
 }
 
+/* Night mode switches in and out slowly */
+html.slow-fade {
+  transition-duration: 6s;
+}
+
 /* No fade on the very first paint */
 html.no-fade {
   transition: none;
@@ -146,6 +151,18 @@ html[data-category="identity"] {
     --bg-bottom: #23343A;
     --accent: #9BC2BB;
   }
+}
+
+/* Warm night, 21:00–05:00: one palette with no blue light, on every screen and
+   in both phone modes (set from app.js; overrides everything above) */
+html[data-night],
+html[data-night][data-category] {
+  --bg-top: #2A2019;
+  --bg-bottom: #1E1712;
+  --ink: #EADBC4;
+  --ink-soft: #CDB89C;
+  --accent: #C9A06A;
+  color-scheme: dark;
 }
 
 *,
@@ -547,6 +564,10 @@ legend.setting-title + * {
   padding: 0.45rem 0.7rem;
   min-height: 2.75rem;
   color-scheme: light;
+}
+
+html[data-night] .time input {
+  color-scheme: dark;
 }
 
 @media (prefers-color-scheme: dark) {
