@@ -64,7 +64,14 @@ Then a gentle button to continue, and a short step to choose language, how many 
 - One time for each prompt (defaults: 1 → 18:00; 2 → 10:00, 18:00; 3 → 09:00, 14:00, 20:00).
 - **Add reminders to my calendar** button (see below).
 - Re-read the welcome text.
-- A short, honest "About & privacy" note: no data collected, settings stay on this device, reminders live in the user's own calendar.
+- A short, honest "About & privacy" note: no data collected, settings stay on this device, reminders live in the user's own calendar. Under it, a quiet link to the Info & Privacy page: IT *Leggi tutto: informazioni e privacy* · EN *Read more: info & privacy*.
+
+### 4. Info & Privacy
+- A screen of `index.html` (`#info`), so it is in the offline copy and follows the app's language. Both languages are written out in the page (`.info-text[lang]`); the app shows the one in use. Also opens directly at `…/inward-app/#info` (linked from the README), for everyone, including new visitors.
+- Same calm style; the drawn "←" back control at the top and bottom says *Impostazioni/Settings* when opened from Settings (and returns there), otherwise *Home*.
+- No cookie banner: there are no cookies, and the only storage is strictly necessary.
+- Sections: who makes Inward (Sandra's Apps, contact `sandras.apps.studio@gmail.com`); no cookies, no tracking; what is stored and where (settings incl. whether the welcome was seen, tapped reminder buttons, the "Not today" choice for the current prompt, plus the offline copy of the app's files), that it never leaves the device, and how to delete it; what you write; hosting (GitHub Pages, GitHub's privacy statement); calendar reminders (Google Calendar link carries title, time and app link to Google; the `.ics` is made on the device); not therapy; credits (Fraunces by Undercase Type, SIL OFL 1.1; icon made with the help of AI (ChatGPT) and refined by Sandra's Apps; code written with the help of AI (Claude, by Anthropic)); use as is; last updated date.
+- **Everything it says must stay literally true of the code.** When something changes (a new stored value, a new outside service, a new link), update the page and its "last updated" date.
 
 ## How the daily prompt is chosen
 
