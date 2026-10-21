@@ -97,6 +97,13 @@ Every reminder is a daily event of **30 minutes** (not shorter: we don't want to
 
 Next to the button(s), explain in one or two plain lines: the reminder opens the calendar, tap it to open Inward; to change times, delete the old Inward event from the calendar and add the new one.
 
+**After a button has been used.** The app can't know whether the event was really saved, so it must never say it was. It only remembers, in `localStorage`, which buttons were tapped for the current times.
+
+- The first-setup reminder step always shows every button, as it is.
+- In Settings, once every button has been tapped (on Android with 2 or 3 times, each one; elsewhere, the single download), hide the button(s) and the 2-step guide. In their place show only one quiet text link, same style as "Not today, another one": IT *Non hai ancora aggiunto il promemoria al calendario? Tocca qui* · EN *Haven't added the reminder to your calendar yet? Tap here*. Tapping it shows the button(s) and the guide again, until Settings is left.
+- On Android with 2 or 3 times, until all have been tapped, show only the buttons not tapped yet.
+- If the number of prompts or any time changes, forget what was tapped and show the button(s) again. If a reminder had already been added for the old times, add one plain line above them: IT *Hai cambiato orario: elimina il vecchio evento Inward dal calendario e aggiungi quello nuovo.* · EN *You changed the time: delete the old Inward event from your calendar and add the new one.*
+
 Test on Android (Google Calendar) and iPhone (Apple Calendar).
 
 ## Design
