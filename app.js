@@ -18,6 +18,7 @@
       invitation: "Rallenta, respira, e scrivi finché c'è qualcosa da dire.",
       another: "Non oggi, un'altra",
       settings: "Impostazioni",
+      updateReady: "Una nuova versione di Inward ti aspetta · Aggiorna",
       home: "Home",
       language: "Lingua",
       perDay: "Spunti al giorno",
@@ -66,6 +67,7 @@
       invitation: "Slow down, breathe, and write until there's nothing left to say.",
       another: "Not today, another one",
       settings: "Settings",
+      updateReady: "A new version of Inward is ready · Update",
       home: "Home",
       language: "Language",
       perDay: "Prompts per day",
@@ -643,10 +645,7 @@
     // Redraw the form each time, so it always shows what is saved
     // (a time changed during setup must also appear in Settings).
     if (id === "setup" || id === "settings") renderChoices();
-    if (id === "today") {
-      renderPrompt();
-      reloadIfUpdated(); // a new version waited for the user to come back here
-    }
+    if (id === "today") renderPrompt();
   }
 
   function renderPrompt(force) {
@@ -928,27 +927,32 @@
   }
 
   // ---------------------------------------------------------------------------
-  // Updates. A new version takes over at once (see sw.js), but this page keeps
-  // running the old code until it reloads. Reload quietly, and only on the prompt
-  // screen: never in the middle of Settings, the welcome or the setup.
+  // Updates. Online, every open already loads the latest files (see sw.js). Only
+  // when this page had to use the offline copy (slow or no network) can a newer
+  // version arrive while it's open; then a quiet link on the prompt screen offers
+  // it. Never on the very first visit, and never a reload the user didn't ask for.
 
-  var updateReady = false;
-
-  function reloadIfUpdated() {
-    if (updateReady && !$("#today").hidden) location.reload();
+  function showUpdateLink() {
+    $("#update-now").hidden = false;
   }
 
   function registerServiceWorker() {
     if (!("serviceWorker" in navigator) || location.protocol === "file:") return;
     var sw = navigator.serviceWorker;
-    var hadVersion = !!sw.controller; // on the very first visit there is nothing to refresh
+    var hadVersion = !!sw.controller; // on the very first visit there is nothing to update
+    var offlineCopy = false;
+    sw.addEventListener("message", function (event) {
+      var type = event.data && event.data.type;
+      if (type === "inward-offline-copy") offlineCopy = true;
+      if (type === "inward-update-ready" && hadVersion) showUpdateLink();
+    });
+    // A new version took over: it matters only if this page runs the offline copy.
     sw.addEventListener("controllerchange", function () {
-      if (!hadVersion) {
-        hadVersion = true;
-        return;
-      }
-      updateReady = true;
-      reloadIfUpdated();
+      if (hadVersion && offlineCopy) showUpdateLink();
+      hadVersion = true;
+    });
+    $("#update-now").addEventListener("click", function () {
+      location.reload();
     });
     sw.register("sw.js").then(function (registration) {
       function check() {
