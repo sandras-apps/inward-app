@@ -35,7 +35,9 @@
       },
       calendarStep2: "Prima di salvare, tocca ‘30 minuti prima’ e scegli ‘All'ora dell'evento’.",
       calendarReady: "File pronto: apri il file scaricato e scegli la tua app Calendario.",
-      calendarReveal: "Non hai ancora aggiunto il promemoria al calendario? Tocca qui",
+      calendarAgain: "Non hai ancora aggiunto il promemoria al calendario? Tocca qui",
+      calendarAgainTime: "Non hai ancora aggiunto il promemoria delle {time}? Tocca qui",
+      calendarFoldedHint: "Prima di salvare, scegli la notifica ‘All'ora dell'evento’.",
       calendarChanged: "Hai cambiato orario: elimina il vecchio evento Inward dal calendario e aggiungi quello nuovo.",
       calendarDescription: "Un momento per te. Prendi il quaderno e apri Inward.",
       remindersStepTitle: "Un promemoria, se vuoi",
@@ -80,7 +82,9 @@
       },
       calendarStep2: "Before saving, tap ‘30 minutes before’ and choose ‘At time of event’.",
       calendarReady: "File ready: open the downloaded file and choose your Calendar app.",
-      calendarReveal: "Haven't added the reminder to your calendar yet? Tap here",
+      calendarAgain: "Haven't added the reminder to your calendar yet? Tap here",
+      calendarAgainTime: "Haven't added the {time} reminder yet? Tap here",
+      calendarFoldedHint: "Before saving, choose the notification ‘At time of event’.",
       calendarChanged: "You changed the time: delete the old Inward event from your calendar and add the new one.",
       calendarDescription: "A moment for yourself. Take your notebook and open Inward.",
       remindersStepTitle: "A reminder, if you like",
@@ -457,9 +461,6 @@
     writeJSON(CALENDAR_KEY, state);
   }
 
-  // In Settings, the folded buttons can be shown again until Settings is left.
-  var calendarRevealed = false;
-
   // In the setup step, "Not now" becomes "Continue" once a reminder is on its way.
   function reminderAdded() {
     var done = $("#reminders-done");
@@ -476,13 +477,14 @@
   }
 
   // The first-setup step always shows every button. Settings shows only the ones
-  // not tapped yet, and folds into one quiet link once all have been tapped.
+  // not tapped yet; once all have been tapped, they fold into quiet links that
+  // still open the calendar directly (no unfolding step).
   function renderCalendarActions() {
     var t = STRINGS[settings.lang];
     var android = isAndroid();
     var state = calendarState();
     $all("[data-calendar]").forEach(function (wrap) {
-      var folding = wrap.getAttribute("data-calendar") === "settings" && !calendarRevealed;
+      var folding = wrap.getAttribute("data-calendar") === "settings";
       var slots = [];
       settings.times.forEach(function (time, i) {
         if (!folding || state.used.indexOf(time) === -1) slots.push(i);
@@ -493,7 +495,8 @@
       var box = $(".calendar-actions", wrap);
       box.textContent = "";
       slots.forEach(function (i) {
-        box.appendChild(android ? googleButton(t, i, folding) : downloadButton(t));
+        var label = settings.perDay === 1 ? t.addCalendar : t.addTime.replace("{time}", settings.times[i]);
+        box.appendChild(android ? googleLink(i, "button", label, folding) : downloadControl("button", t.addCalendar));
       });
 
       var guide = $(".calendar-android-note", wrap);
@@ -503,16 +506,28 @@
 
       var changed = $(".calendar-changed", wrap);
       if (changed) changed.hidden = folded || !state.changed;
-      var reveal = $(".calendar-reveal", wrap);
-      if (reveal) reveal.hidden = !folded;
+
+      var again = $(".calendar-folded", wrap);
+      if (!again) return;
+      again.textContent = "";
+      if (folded && android) {
+        settings.times.forEach(function (time, i) {
+          var label = settings.perDay === 1 ? t.calendarAgain : t.calendarAgainTime.replace("{time}", time);
+          again.appendChild(googleLink(i, "link calendar-again", label, false));
+        });
+      } else if (folded) {
+        again.appendChild(downloadControl("link calendar-again", t.calendarAgain));
+      }
+      again.hidden = !folded;
+      $(".calendar-folded-hint", wrap).hidden = !(folded && android);
     });
   }
 
-  function downloadButton(t) {
+  function downloadControl(className, label) {
     var button = document.createElement("button");
     button.type = "button";
-    button.className = "button";
-    button.textContent = t.addCalendar;
+    button.className = className;
+    button.textContent = label;
     button.addEventListener("click", function () {
       syncTimesFromSettings();
       tidyTimes();
@@ -522,21 +537,20 @@
     return button;
   }
 
-  function googleButton(t, i, folding) {
-    var time = settings.times[i];
+  function googleLink(i, className, label, redraw) {
     var link = document.createElement("a");
-    link.className = "button";
+    link.className = className;
     link.target = "_blank";
     link.rel = "noopener";
-    link.textContent = settings.perDay === 1 ? t.addCalendar : t.addTime.replace("{time}", time);
-    link.href = googleCalendarLink(time);
+    link.textContent = label;
+    link.href = googleCalendarLink(settings.times[i]);
     link.addEventListener("click", function () {
       syncTimesFromSettings();
       link.href = googleCalendarLink(settings.times[i]);
       rememberReminder([settings.times[i]]);
       reminderAdded();
       // Redraw a moment later, so removing the link doesn't cancel opening it.
-      if (folding) setTimeout(renderCalendarActions, 400);
+      if (redraw) setTimeout(renderCalendarActions, 400);
     });
     return link;
   }
@@ -587,7 +601,6 @@
       el.hidden = el.id !== id;
     });
     window.scrollTo(0, 0);
-    if (id === "settings") calendarRevealed = false;
     // Redraw the form each time, so it always shows what is saved
     // (a time changed during setup must also appear in Settings).
     if (id === "setup" || id === "settings") renderChoices();
@@ -801,10 +814,6 @@
       saveSettings();
       tidyTimes();
       showScreen("today");
-    });
-    $(".calendar-reveal").addEventListener("click", function () {
-      calendarRevealed = true;
-      renderCalendarActions();
     });
     $("#reread-welcome").addEventListener("click", function () {
       showScreen("welcome");

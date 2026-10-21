@@ -287,8 +287,19 @@ body::before {
   margin: 0 0 1.25rem;
 }
 
-.calendar-reveal {
+/* Folded: one quiet link per time, each opening the calendar directly */
+.calendar-folded {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.calendar-again {
   text-align: left;
+}
+
+.calendar-folded-hint {
+  margin-top: 0.25rem;
 }
 
 .calendar-actions {
