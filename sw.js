@@ -6,7 +6,7 @@
    installs a fresh copy, takes over at once (skipWaiting + clients.claim), and
    the app then reloads quietly on the prompt screen (see app.js). */
 
-var VERSION = "inward-v10";
+var VERSION = "inward-v11";
 
 var FILES = [
   "./",
