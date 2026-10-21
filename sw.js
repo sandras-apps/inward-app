@@ -12,7 +12,7 @@
    - A changed VERSION installs fresh copies of every file and takes over at once
      (skipWaiting + clients.claim). */
 
-var VERSION = "inward-v12";
+var VERSION = "inward-v13";
 
 var FILES = [
   "./",
