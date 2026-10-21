@@ -49,7 +49,15 @@ then open http://localhost:8000.
 
 ## Updating the app
 
-When you change any file, also change `VERSION` at the top of `sw.js` (for example `inward-v1` → `inward-v2`). Otherwise phones that already opened Inward keep showing the old copy.
+When you change any file, also change `VERSION` at the top of `sw.js` (for example `inward-v1` → `inward-v2`). That's what tells phones there's a new version.
+
+How an update reaches people, on its own:
+
+1. When Inward opens, or comes back to the screen, it checks for a new `sw.js`.
+2. If `VERSION` changed, it downloads a fresh copy of every file in the background and switches to it straight away.
+3. The page then reloads quietly, but only while the prompt is on screen. If Settings, the welcome or the setup is open, it waits until the person is back on the prompt (or reopens the app).
+
+Settings are never lost: saved values keep their names, and if one ever needs a new shape, the old value is converted (see `migrateStorage()` in `app.js`).
 
 ## How the daily prompt is chosen
 

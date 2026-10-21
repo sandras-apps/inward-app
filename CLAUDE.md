@@ -58,7 +58,7 @@ Then a gentle button to continue, and a short step to choose language, how many 
 - Nothing else on screen.
 
 ### 3. Settings
-- At the top, a quiet back control: a drawn "←" arrow followed by *Home* (same word in IT and EN), same quiet italic style as the other links. It goes back to the prompt screen.
+- At the top and at the bottom, the same quiet back control: a drawn "←" arrow followed by *Home* (same word in IT and EN), same quiet italic style as the other links. It goes back to the prompt screen.
 - Language: Italiano / English (default: browser language, fallback English).
 - Prompts per day: 1, 2 or 3 (default 1).
 - One time for each prompt (defaults: 1 → 18:00; 2 → 10:00, 18:00; 3 → 09:00, 14:00, 20:00).
@@ -79,7 +79,7 @@ Then a gentle button to continue, and a short step to choose language, how many 
 
 PWAs can't schedule local notifications at fixed times without a server, and we don't want a server. So reminders go through the user's own phone calendar. They are offered in the first setup (a step right after the times) and in Settings.
 
-Every reminder is a daily event of **30 minutes** (not shorter: we don't want to rush anyone), titled `Inward`, starting at the chosen time. Description: one gentle line in the user's language plus the app URL.
+Every reminder is a daily event of **30 minutes** (not shorter: we don't want to rush anyone), starting at the chosen time, titled in the app's language (gender-neutral): IT *Inward · Un momento per te* · EN *Inward · A moment for you*. Description: one gentle line in the user's language plus the app URL.
 
 **On Android** (Google Calendar), a downloaded `.ics` needs too many steps (find the file, choose to open it with Calendar), and Google ignores its alert. So instead:
 
@@ -131,6 +131,18 @@ Test on Android (Google Calendar) and iPhone (Apple Calendar).
 - Pull-to-refresh is disabled (`overscroll-behavior-y: contain` on `html` and `body`).
 - Settings, and the welcome re-read from Settings, are pushed onto the browser history, so the Android back gesture/button goes back a screen (welcome → Settings → prompt) instead of closing the app. The app's own back links go back through the history the same way.
 - The open screen is kept in the URL hash (`#settings`, `#welcome`, `#reminders`; the prompt screen has none), so a reload reopens the same screen, scrolled to the top. A new user who hasn't finished the welcome always starts there (or back in the setup step).
+
+## Updates
+
+Updates must reach people on their own, without closing the app several times.
+
+- Every change to any file ships with a new `VERSION` in `sw.js`.
+- The browser checks `sw.js` when the app opens; the app also calls `registration.update()` whenever it comes back to the foreground.
+- A new version installs a fresh copy of every file (fetched with `cache: "reload"`, bypassing the browser's HTTP cache), then takes over at once (`skipWaiting()` + `clients.claim()`).
+- The open page still runs the old code, so it reloads quietly, but **only on the prompt screen**. If Settings, the welcome or the setup is open, it waits until the user is back on the prompt, or simply reopens the app.
+- No reload on the very first visit (nothing to refresh).
+
+**Saved data survives every update.** `localStorage` keys (`inward.settings`, `inward.skip`, `inward.calendar`) never change name; missing or unknown fields fall back to defaults. If the shape of a saved value ever has to change, convert the old value in `migrateStorage()` in `app.js` (it runs before anything reads saved data) instead of dropping it.
 
 ## Out of scope for now
 
