@@ -170,6 +170,14 @@
 
   var settings = loadSettings();
 
+  function removeKey(key) {
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {
+      // Storage disabled: nothing to remove.
+    }
+  }
+
   function saveSettings() {
     writeJSON(SETTINGS_KEY, settings);
   }
@@ -902,6 +910,24 @@
   }
 
   // ---------------------------------------------------------------------------
+  // Saved data must survive every update. Keys never change name; missing or
+  // unknown fields fall back to defaults (see loadSettings). If the shape of a
+  // saved value has to change, convert the old value here instead of dropping it.
+
+  function migrateStorage() {
+    // inward.skip, before prompts changed at the chosen time:
+    // { date: "YYYY-MM-DD", perDay: n, slots: { "0": 1 } } → { period, count }.
+    var skips = readJSON(SKIP_KEY);
+    if (skips && typeof skips === "object" && skips.slots && !skips.period) {
+      var period = currentPeriod(new Date());
+      var count = skips.date === dateKey(period.day) && skips.perDay === settings.perDay ?
+        Number(skips.slots[period.slot]) || 0 : 0;
+      if (count > 0) writeJSON(SKIP_KEY, { period: periodKey(period), count: count });
+      else removeKey(SKIP_KEY);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
   // Updates. A new version takes over at once (see sw.js), but this page keeps
   // running the old code until it reloads. Reload quietly, and only on the prompt
   // screen: never in the middle of Settings, the welcome or the setup.
@@ -936,6 +962,7 @@
   }
 
   function start() {
+    migrateStorage();
     applyPhase();
     applyLanguage();
     bindEvents();
