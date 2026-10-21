@@ -134,13 +134,14 @@ Test on Android (Google Calendar) and iPhone (Apple Calendar).
 
 ## Updates
 
-Updates must reach people on their own, without closing the app several times.
+Updates must reach people on their own. People open Inward, read the prompt and close it within seconds, so an update can't depend on the app staying open.
 
 - Every change to any file ships with a new `VERSION` in `sw.js`.
-- The browser checks `sw.js` when the app opens; the app also calls `registration.update()` whenever it comes back to the foreground.
-- A new version installs a fresh copy of every file (fetched with `cache: "reload"`, bypassing the browser's HTTP cache), then takes over at once (`skipWaiting()` + `clients.claim()`).
-- The open page still runs the old code, so it reloads quietly, but **only on the prompt screen**. If Settings, the welcome or the setup is open, it waits until the user is back on the prompt, or simply reopens the app.
-- No reload on the very first visit (nothing to refresh).
+- **Network first for the core files** (the page, `app.js`, `styles.css`, `prompts.json`), fetched with `cache: "no-cache"` so the browser's short-term cache can't serve old copies. An online open therefore always shows the latest version.
+- **2-second fallback:** if the network hasn't answered within about 2 seconds, or is off, the offline copy is used at once. After one such fallback, the next core files in the same load use the offline copy straight away (no chain of 2-second waits). Fonts and icons stay offline-first.
+- When the offline copy was used, the network answer still arrives in the background and refreshes the copy. If it differs, the service worker tells the page.
+- The browser also checks `sw.js` when the app opens, and the app calls `registration.update()` whenever it comes back to the foreground. A new `VERSION` installs fresh copies of every file (`cache: "reload"`) and takes over at once (`skipWaiting()` + `clients.claim()`).
+- **No automatic reload.** When this page runs an older copy and a newer one is ready, a quiet link appears near the bottom of the prompt screen, same discreet italic style as "Not today, another one": IT *Una nuova versione di Inward ti aspetta · Aggiorna* · EN *A new version of Inward is ready · Update*. Tapping it reloads into the new version on the prompt screen. It never shows on the very first visit, nor when the page is already up to date.
 
 **Saved data survives every update.** `localStorage` keys (`inward.settings`, `inward.skip`, `inward.calendar`) never change name; missing or unknown fields fall back to defaults. If the shape of a saved value ever has to change, convert the old value in `migrateStorage()` in `app.js` (it runs before anything reads saved data) instead of dropping it.
 

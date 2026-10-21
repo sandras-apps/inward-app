@@ -53,9 +53,10 @@ When you change any file, also change `VERSION` at the top of `sw.js` (for examp
 
 How an update reaches people, on its own:
 
-1. When Inward opens, or comes back to the screen, it checks for a new `sw.js`.
-2. If `VERSION` changed, it downloads a fresh copy of every file in the background and switches to it straight away.
-3. The page then reloads quietly, but only while the prompt is on screen. If Settings, the welcome or the setup is open, it waits until the person is back on the prompt (or reopens the app).
+1. **Online, the next time Inward opens, it shows the new version straight away.** The page, its script, its styles and the prompts are always asked from the network first.
+2. On a slow connection (no answer within about 2 seconds) or offline, Inward opens with its saved copy instead, so it's never stuck waiting. The download carries on in the background.
+3. If that download brings a newer version while the app is open, a quiet link appears near the bottom of the prompt screen: *"A new version of Inward is ready · Update"*. Tapping it switches to the new version. The app never reloads by itself.
+4. Separately, when `VERSION` in `sw.js` changes, a fresh offline copy of every file (fonts and icons included) is saved for next time.
 
 Settings are never lost: saved values keep their names, and if one ever needs a new shape, the old value is converted (see `migrateStorage()` in `app.js`).
 
