@@ -24,6 +24,8 @@ Installing doesn't add notifications: reminders still come from your phone calen
 
 Inward collects nothing. No accounts, no analytics, no cookies, no requests to other sites (the font is included in the app). The only thing saved is your settings, in your browser's storage on your own device. What you write stays on paper.
 
+The full details are in the app: **[Info & Privacy](https://sandras-apps.github.io/inward-app/#info)** (in Italian or English, following the app's language).
+
 ## Running it locally
 
 It's plain HTML, CSS and JavaScript with no build step. Serve the folder with any static server, for example:
