@@ -40,6 +40,7 @@
       calendarAgainTime: "Non hai ancora aggiunto il promemoria delle {time}? Tocca qui",
       calendarFoldedHint: "Prima di salvare, scegli la notifica ‘All'ora dell'evento’.",
       calendarChanged: "Hai cambiato orario: elimina il vecchio evento Inward dal calendario e aggiungi quello nuovo.",
+      calendarTitle: "Inward · Un momento per te",
       calendarDescription: "Un momento per te. Prendi il quaderno e apri Inward.",
       remindersStepTitle: "Un promemoria, se vuoi",
       remindersStepText: {
@@ -87,6 +88,7 @@
       calendarAgainTime: "Haven't added the {time} reminder yet? Tap here",
       calendarFoldedHint: "Before saving, choose the notification ‘At time of event’.",
       calendarChanged: "You changed the time: delete the old Inward event from your calendar and add the new one.",
+      calendarTitle: "Inward · A moment for you",
       calendarDescription: "A moment for yourself. Take your notebook and open Inward.",
       remindersStepTitle: "A reminder, if you like",
       remindersStepText: {
@@ -317,7 +319,7 @@
     var times = eventTimes(new Date(), time);
     var params = new URLSearchParams({
       action: "TEMPLATE",
-      text: "Inward",
+      text: STRINGS[settings.lang].calendarTitle,
       dates: times.start + "/" + times.end,
       details: STRINGS[settings.lang].calendarDescription + "\n" + appURL(),
       recur: "RRULE:FREQ=DAILY"
@@ -400,14 +402,14 @@
         "DTSTART:" + times.start,
         "DTEND:" + times.end,
         "RRULE:FREQ=DAILY",
-        "SUMMARY:Inward",
+        "SUMMARY:" + icsEscape(t.calendarTitle),
         "DESCRIPTION:" + icsEscape(t.calendarDescription + "\n" + url),
         "URL:" + url,
         "TRANSP:TRANSPARENT",
         // Apple Calendar honours this alert; Google Calendar ignores it.
         "BEGIN:VALARM",
         "ACTION:DISPLAY",
-        "DESCRIPTION:Inward",
+        "DESCRIPTION:" + icsEscape(t.calendarTitle),
         "TRIGGER:PT0M",
         "END:VALARM",
         "END:VEVENT"
