@@ -196,14 +196,23 @@
     return Number(parts[0]) * 60 + Number(parts[1]);
   }
 
-  // The latest slot whose time has passed today; before the first one, the first one.
-  function currentSlot(d) {
+  // A new prompt appears at each chosen time, not at midnight. The current period is
+  // the latest time slot that has started: today's, or, before today's first time,
+  // the last slot of the previous day (so its prompt simply stays until then).
+  function currentPeriod(d) {
     var now = d.getHours() * 60 + d.getMinutes();
-    var slot = 0;
+    var slot = -1;
     for (var i = 0; i < settings.times.length; i++) {
       if (minutesOf(settings.times[i]) <= now) slot = i;
     }
-    return slot;
+    if (slot === -1) {
+      return { day: new Date(d.getFullYear(), d.getMonth(), d.getDate() - 1), slot: settings.times.length - 1 };
+    }
+    return { day: new Date(d.getFullYear(), d.getMonth(), d.getDate()), slot: slot };
+  }
+
+  function periodKey(period) {
+    return dateKey(period.day) + "#" + period.slot + "#" + settings.perDay;
   }
 
   function phaseOf(d) {
@@ -255,22 +264,22 @@
     return ((n % m) + m) % m;
   }
 
-  // Today's skips: { date: "YYYY-MM-DD", perDay: n, slots: { "0": 1 } }. Gone the next day.
-  function todaysSkips(d) {
+  // Skips for the prompt on screen: { period: "2026-10-21#0#1", count: 1 }.
+  // They are gone as soon as the next prompt appears.
+  function skipsFor(period) {
     var skips = readJSON(SKIP_KEY);
-    if (!skips || skips.date !== dateKey(d) || skips.perDay !== settings.perDay || typeof skips.slots !== "object") {
-      return { date: dateKey(d), perDay: settings.perDay, slots: {} };
-    }
-    return skips;
+    if (!skips || skips.period !== periodKey(period) || typeof skips.count !== "number") return 0;
+    return skips.count;
   }
 
-  function promptFor(d, slot) {
+  function promptFor(period) {
     var n = order.length;
-    var day = daysSinceFixedDate(d);
+    var day = daysSinceFixedDate(period.day);
+    var slot = period.slot;
     var index = mod(day * settings.perDay + slot, n);
-    var steps = todaysSkips(d).slots[slot] || 0;
+    var steps = skipsFor(period);
 
-    // Never land on a prompt that belongs to another of today's slots.
+    // Never land on a prompt that belongs to another slot of the same day.
     var taken = {};
     for (var j = 0; j < settings.perDay; j++) {
       if (j !== slot) taken[mod(day * settings.perDay + j, n)] = true;
@@ -615,8 +624,7 @@
 
   function renderPrompt(force) {
     if (!order.length) return;
-    var now = new Date();
-    var prompt = promptFor(now, currentSlot(now));
+    var prompt = promptFor(currentPeriod(new Date()));
     var key = prompt.id + "|" + settings.lang;
     if (!force && key === shown) return;
     shown = key;
@@ -724,11 +732,8 @@
   }
 
   function anotherPrompt() {
-    var now = new Date();
-    var slot = currentSlot(now);
-    var skips = todaysSkips(now);
-    skips.slots[slot] = (skips.slots[slot] || 0) + 1;
-    writeJSON(SKIP_KEY, skips);
+    var period = currentPeriod(new Date());
+    writeJSON(SKIP_KEY, { period: periodKey(period), count: skipsFor(period) + 1 });
     renderPrompt();
   }
 
@@ -825,16 +830,23 @@
       showScreen("welcome");
     });
 
-    // Keep the prompt and colours current if the app stays open across a time slot or midnight.
+    // Keep the prompt and colours current while the app stays open: check at the
+    // start of every minute (so a new prompt appears right at its time), and
+    // whenever the app comes back to the foreground.
     function refresh() {
       applyPhase();
       if (!$("#today").hidden) renderPrompt();
     }
-    setInterval(refresh, 30000);
+    function everyMinute() {
+      refresh();
+      setTimeout(everyMinute, 60000 - (Date.now() % 60000) + 50);
+    }
+    setTimeout(everyMinute, 60000 - (Date.now() % 60000) + 50);
     document.addEventListener("visibilitychange", function () {
       if (!document.hidden) refresh();
     });
     window.addEventListener("pageshow", refresh);
+    window.addEventListener("focus", refresh);
   }
 
   function loadPrompts() {
