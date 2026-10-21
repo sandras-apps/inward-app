@@ -123,12 +123,112 @@
       <section class="setting">
         <h3 class="setting-title" data-i18n="aboutTitle"></h3>
         <p class="quiet" data-i18n="about"></p>
+        <button type="button" class="link" id="open-info" data-i18n="infoLink"></button>
       </section>
 
       <div class="actions">
         <button type="button" class="link back-home" id="close-settings">
           <svg class="back-arrow" aria-hidden="true" viewBox="0 0 16 10" width="16" height="10"><path d="M15 5H1.5M5.5 1L1.5 5l4 4" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           <span data-i18n="home"></span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Info & privacy: both languages are here; the app shows the one in use -->
+  <main id="info" class="screen" hidden>
+    <div class="column info">
+      <button type="button" class="link back-home info-back">
+        <svg class="back-arrow" aria-hidden="true" viewBox="0 0 16 10" width="16" height="10"><path d="M15 5H1.5M5.5 1L1.5 5l4 4" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="info-back-label"></span>
+      </button>
+
+      <div class="info-text" lang="it">
+        <h2 class="screen-title">Informazioni e privacy</h2>
+
+        <h3 class="setting-title">Chi fa Inward</h3>
+        <p>Inward è un progetto gratuito e non commerciale di Sandra’s Apps. Contatti: <a href="mailto:sandras.apps.studio@gmail.com">sandras.apps.studio@gmail.com</a></p>
+
+        <h3 class="setting-title">Niente cookie, niente tracciamento</h3>
+        <p>Inward non usa cookie, statistiche né pubblicità, e non ha account. Non carica script né font di terze parti: tutto ciò che serve, font compreso, fa parte dell’app.</p>
+
+        <h3 class="setting-title">Cosa viene salvato, e dove</h3>
+        <p>Solo ciò che serve all’app per funzionare, nella memoria locale del browser, sul tuo dispositivo:</p>
+        <ul>
+          <li>le tue impostazioni: lingua, numero di spunti, i loro orari, e se hai già visto il benvenuto;</li>
+          <li>quali pulsanti dei promemoria hai toccato;</li>
+          <li>la tua scelta “Non oggi, un’altra” per lo spunto di adesso.</li>
+        </ul>
+        <p>Per funzionare anche offline, il browser conserva inoltre una copia dei file dell’app.</p>
+        <p>Niente di tutto questo lascia il tuo dispositivo, e chi sviluppa l’app non può vederlo. È strettamente necessario al funzionamento dell’app, quindi non serve alcun consenso.</p>
+        <p>Per cancellarlo: disinstalla l’app, oppure cancella i dati di questo sito dalle impostazioni del browser.</p>
+
+        <h3 class="setting-title">Quello che scrivi</h3>
+        <p>Resta sulla carta. L’app non te lo chiede mai.</p>
+
+        <h3 class="setting-title">Hosting</h3>
+        <p>L’app è ospitata su GitHub Pages. GitHub può registrare dati tecnici, come gli indirizzi IP, per motivi di sicurezza, secondo la propria <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">informativa sulla privacy</a>.</p>
+
+        <h3 class="setting-title">Promemoria nel calendario</h3>
+        <p>Su Android, il pulsante di Google Calendar apre il servizio di Google, con titolo, orario e link dell’app già compilati: lì vale l’<a href="https://policies.google.com/privacy?hl=it" target="_blank" rel="noopener noreferrer">informativa sulla privacy di Google</a>. Su iPhone e sugli altri dispositivi, il file del calendario viene creato sul tuo dispositivo: non viene inviato nulla da nessuna parte.</p>
+
+        <h3 class="setting-title">Non è una terapia</h3>
+        <p>Inward offre spunti per la riflessione personale. Non è una terapia e non sostituisce l’aiuto di professionisti. Se uno spunto tocca qualcosa di pesante, puoi saltarlo; e se stai attraversando un momento difficile, parlane con una persona di cui ti fidi o con una figura professionale.</p>
+
+        <h3 class="setting-title">Riconoscimenti</h3>
+        <p>I testi usano il font Fraunces di Undercase Type, distribuito con licenza <a href="https://openfontlicense.org" target="_blank" rel="noopener noreferrer">SIL Open Font License 1.1</a>. L’icona dell’app è stata creata con l’aiuto dell’intelligenza artificiale (ChatGPT) e rifinita da Sandra’s Apps. Il codice dell’app è stato scritto con l’aiuto dell’intelligenza artificiale (Claude, di Anthropic).</p>
+
+        <h3 class="setting-title">Così com’è</h3>
+        <p>Inward è gratuita e offerta così com’è, senza garanzie. È e resterà gratuita.</p>
+
+        <p class="quiet info-updated">Ultimo aggiornamento: 21/10/2026</p>
+      </div>
+
+      <div class="info-text" lang="en">
+        <h2 class="screen-title">Info &amp; Privacy</h2>
+
+        <h3 class="setting-title">Who makes Inward</h3>
+        <p>Inward is a free, non-commercial project by Sandra’s Apps. Contact: <a href="mailto:sandras.apps.studio@gmail.com">sandras.apps.studio@gmail.com</a></p>
+
+        <h3 class="setting-title">No cookies, no tracking</h3>
+        <p>Inward uses no cookies, no analytics and no ads, and has no accounts. It loads no third-party scripts or fonts: everything it needs, the font included, comes with the app itself.</p>
+
+        <h3 class="setting-title">What is stored, and where</h3>
+        <p>Only what the app needs to work, in your browser’s local storage on your own device:</p>
+        <ul>
+          <li>your settings: language, number of prompts, their times, and whether you’ve already seen the welcome;</li>
+          <li>which calendar reminder buttons you’ve tapped;</li>
+          <li>your “Not today, another one” choice for the current prompt.</li>
+        </ul>
+        <p>To work offline, your browser also keeps a copy of the app’s own files.</p>
+        <p>None of this ever leaves your device, and the developer can’t see it. It’s strictly necessary for the app to work, so no consent is needed.</p>
+        <p>To delete it: uninstall the app, or clear this site’s data in your browser settings.</p>
+
+        <h3 class="setting-title">What you write</h3>
+        <p>It stays on paper. The app never asks for it.</p>
+
+        <h3 class="setting-title">Hosting</h3>
+        <p>The app is hosted on GitHub Pages. GitHub may log technical data, such as IP addresses, for security, under its own <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">privacy statement</a>.</p>
+
+        <h3 class="setting-title">Calendar reminders</h3>
+        <p>On Android, the Google Calendar button opens Google’s own service, with the reminder’s title, time and the app’s link already filled in; there, <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google’s privacy policy</a> applies. On iPhone and other devices, the calendar file is created on your device; nothing is sent anywhere.</p>
+
+        <h3 class="setting-title">Not therapy</h3>
+        <p>Inward offers prompts for personal reflection. It is not therapy and doesn’t replace professional help. If a prompt brings up something heavy, you can skip it, and if you’re going through a hard time, talk to someone you trust or a professional.</p>
+
+        <h3 class="setting-title">Credits</h3>
+        <p>The text is set in Fraunces, by Undercase Type, released under the <a href="https://openfontlicense.org" target="_blank" rel="noopener noreferrer">SIL Open Font License 1.1</a>. The app icon was created with the help of AI (ChatGPT) and refined by Sandra’s Apps. The app’s code was written with the help of AI (Claude, by Anthropic).</p>
+
+        <h3 class="setting-title">Use as is</h3>
+        <p>Inward is free and offered as is, without warranties. It is and will remain free.</p>
+
+        <p class="quiet info-updated">Last updated: 21/10/2026</p>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="link back-home info-back">
+          <svg class="back-arrow" aria-hidden="true" viewBox="0 0 16 10" width="16" height="10"><path d="M15 5H1.5M5.5 1L1.5 5l4 4" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="info-back-label"></span>
         </button>
       </div>
     </div>

@@ -54,6 +54,7 @@
       installIos: "Per installare l'app: tocca Condividi, poi ‘Aggiungi alla schermata Home’.",
       rereadWelcome: "Rileggi il benvenuto",
       aboutTitle: "Informazioni e privacy",
+      infoLink: "Leggi tutto: informazioni e privacy",
       about: "Inward è gratuita e non raccoglie nessun dato: niente account, niente tracciamento, niente cookie. Le tue impostazioni restano solo su questo dispositivo. I promemoria vivono nel tuo calendario, non qui. E quello che scrivi resta sulla carta.",
       loadError: "Gli spunti non si sono caricati. Riprova tra poco."
     },
@@ -103,6 +104,7 @@
       installIos: "To install the app: tap Share, then ‘Add to Home Screen’.",
       rereadWelcome: "Re-read the welcome",
       aboutTitle: "About & privacy",
+      infoLink: "Read more: info & privacy",
       about: "Inward is free and collects no data: no accounts, no tracking, no cookies. Your settings stay on this device only. Reminders live in your own calendar, not here. And what you write stays on paper.",
       loadError: "The prompts couldn't load. Please try again in a moment."
     }
@@ -595,6 +597,10 @@
     $all("[data-i18n]").forEach(function (el) {
       el.textContent = text(el.getAttribute("data-i18n"));
     });
+    // Longer texts (the info page) are written out in both languages in the page.
+    $all(".info-text").forEach(function (el) {
+      el.hidden = el.getAttribute("lang") !== settings.lang;
+    });
     renderChoices();
   }
 
@@ -667,7 +673,7 @@
     if (how !== "pop") {
       try {
         var url = id === "today" ? location.pathname + location.search : "#" + id;
-        if (how === "push") history.pushState({ inward: "pushed" }, "", url);
+        if (how === "push") history.pushState({ inward: "pushed", from: current ? current.id : "" }, "", url);
         else history.replaceState(null, "", url);
       } catch (e) {
         // Not allowed in some sandboxed views: a reload then simply starts on the prompt.
@@ -678,6 +684,13 @@
     // (a time changed during setup must also appear in Settings).
     if (id === "setup" || id === "settings") renderChoices();
     if (id === "today") renderPrompt();
+    if (id === "info") {
+      // Back to Settings when opened from there; otherwise home.
+      var label = infoCameFromSettings() ? STRINGS[settings.lang].settings : STRINGS[settings.lang].home;
+      $all(".info-back-label").forEach(function (el) {
+        el.textContent = label;
+      });
+    }
     applyTheme();
   }
 
@@ -802,6 +815,10 @@
 
   // Go back one screen: through the history when the screen was pushed (so our
   // links and Android's back gesture agree), otherwise straight to the fallback.
+  function infoCameFromSettings() {
+    return !!(history.state && history.state.inward === "pushed" && history.state.from === "settings");
+  }
+
   function goBack(fallback) {
     if (history.state && history.state.inward === "pushed") history.back();
     else showScreen(fallback);
@@ -897,6 +914,14 @@
     $("#close-settings").addEventListener("click", function () {
       goBack("today");
     });
+    $("#open-info").addEventListener("click", function () {
+      showScreen("info", "push");
+    });
+    $all(".info-back").forEach(function (button) {
+      button.addEventListener("click", function () {
+        goBack(settings.welcomed ? "today" : "welcome");
+      });
+    });
     $("#reread-welcome").addEventListener("click", function () {
       showScreen("welcome", "push");
     });
@@ -940,6 +965,7 @@
 
   function firstScreen() {
     var saved = location.hash.slice(1);
+    if (saved === "info") return "info"; // linked from the README: open for everyone
     if (!settings.welcomed) return saved === "setup" ? "setup" : "welcome";
     var screens = ["welcome", "reminders", "settings"];
     return screens.indexOf(saved) !== -1 ? saved : "today";

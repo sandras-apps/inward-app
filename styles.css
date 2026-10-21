@@ -473,6 +473,46 @@ legend.setting-title + * {
   flex: none;
 }
 
+/* Info & privacy page */
+#info {
+  justify-content: flex-start;
+}
+
+.info .setting-title {
+  margin-top: 2rem;
+}
+
+.info p,
+.info ul {
+  margin: 0.6rem 0 0;
+}
+
+.info ul {
+  padding-left: 1.3rem;
+}
+
+.info li + li {
+  margin-top: 0.3rem;
+}
+
+.info a {
+  color: var(--ink);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: color-mix(in srgb, var(--ink) 45%, transparent);
+  overflow-wrap: anywhere;
+}
+
+.info a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.info .info-updated {
+  margin-top: 2.5rem;
+  font-style: italic;
+}
+
 /* The same control at the bottom of Settings */
 .actions .back-home {
   margin: 0;
