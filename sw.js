@@ -1,5 +1,10 @@
 /* Inward service worker: keeps a copy of every app file so Inward works offline.
-   Bump VERSION whenever a file changes, so phones fetch the new copy. */
+   Bump VERSION whenever a file changes, so phones fetch the new copy.
+
+   Updates: the browser checks this file for changes when the app opens, and the
+   app asks again whenever it comes back to the foreground. A changed VERSION
+   installs a fresh copy, takes over at once (skipWaiting + clients.claim), and
+   the app then reloads quietly on the prompt screen (see app.js). */
 
 var VERSION = "inward-v10";
 
@@ -24,9 +29,12 @@ var FILES = [
 self.addEventListener("install", function (event) {
   event.waitUntil(
     caches.open(VERSION).then(function (cache) {
-      return cache.addAll(FILES);
+      // Straight from the network: the browser's own cache could still hold old files.
+      return cache.addAll(FILES.map(function (file) {
+        return new Request(file, { cache: "reload" });
+      }));
     }).then(function () {
-      return self.skipWaiting();
+      return self.skipWaiting(); // don't wait for every open window to close
     })
   );
 });
@@ -38,7 +46,7 @@ self.addEventListener("activate", function (event) {
         if (key !== VERSION) return caches.delete(key);
       }));
     }).then(function () {
-      return self.clients.claim();
+      return self.clients.claim(); // take over open windows right away
     })
   );
 });
