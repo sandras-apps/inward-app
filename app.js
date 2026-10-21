@@ -635,7 +635,10 @@
     // Redraw the form each time, so it always shows what is saved
     // (a time changed during setup must also appear in Settings).
     if (id === "setup" || id === "settings") renderChoices();
-    if (id === "today") renderPrompt();
+    if (id === "today") {
+      renderPrompt();
+      reloadIfUpdated(); // a new version waited for the user to come back here
+    }
   }
 
   function renderPrompt(force) {
@@ -898,6 +901,40 @@
     return screens.indexOf(saved) !== -1 ? saved : "today";
   }
 
+  // ---------------------------------------------------------------------------
+  // Updates. A new version takes over at once (see sw.js), but this page keeps
+  // running the old code until it reloads. Reload quietly, and only on the prompt
+  // screen: never in the middle of Settings, the welcome or the setup.
+
+  var updateReady = false;
+
+  function reloadIfUpdated() {
+    if (updateReady && !$("#today").hidden) location.reload();
+  }
+
+  function registerServiceWorker() {
+    if (!("serviceWorker" in navigator) || location.protocol === "file:") return;
+    var sw = navigator.serviceWorker;
+    var hadVersion = !!sw.controller; // on the very first visit there is nothing to refresh
+    sw.addEventListener("controllerchange", function () {
+      if (!hadVersion) {
+        hadVersion = true;
+        return;
+      }
+      updateReady = true;
+      reloadIfUpdated();
+    });
+    sw.register("sw.js").then(function (registration) {
+      function check() {
+        registration.update().catch(function () {}); // offline: try again later
+      }
+      check();
+      document.addEventListener("visibilitychange", function () {
+        if (!document.hidden) check();
+      });
+    }).catch(function () {});
+  }
+
   function start() {
     applyPhase();
     applyLanguage();
@@ -911,9 +948,7 @@
       if (!$("#today").hidden) renderPrompt(true);
     }, showLoadError);
 
-    if ("serviceWorker" in navigator && location.protocol !== "file:") {
-      navigator.serviceWorker.register("sw.js").catch(function () {});
-    }
+    registerServiceWorker();
   }
 
   start();
