@@ -58,6 +58,7 @@ Then a gentle button to continue, and a short step to choose language, how many 
 - Nothing else on screen.
 
 ### 3. Settings
+- At the top, a quiet back control: a drawn "←" arrow followed by *Home* (same word in IT and EN), same quiet italic style as the other links. It goes back to the prompt screen.
 - Language: Italiano / English (default: browser language, fallback English).
 - Prompts per day: 1, 2 or 3 (default 1).
 - One time for each prompt (defaults: 1 → 18:00; 2 → 10:00, 18:00; 3 → 09:00, 14:00, 20:00).
@@ -67,10 +68,11 @@ Then a gentle button to continue, and a short step to choose language, how many 
 
 ## How the daily prompt is chosen
 
-- Deterministic, no randomness at runtime: the same prompt stays all day for each time slot, even if the app is reopened.
-- Shuffle the 140 prompts once with a fixed seed (so categories and types are mixed), then pick by `(daysSinceFixedDate × promptsPerDay + slotIndex) mod 140`.
-- The current slot is the latest slot whose time has passed today (before the first slot, show the first one).
-- "Not today, another one" moves to another prompt in the shuffled order for that slot, for today only. Store that small offset in `localStorage` with today's date and discard it the next day.
+- A new prompt appears **at each chosen time** (as Settings says: "A quest'ora trovi uno spunto nuovo"), not at midnight. It then stays until the next chosen time, even if the app is reopened.
+- Deterministic, no randomness at runtime. Shuffle the 140 prompts once with a fixed seed (so categories and types are mixed), then pick by `(daysSinceFixedDate × promptsPerDay + slotIndex) mod 140`.
+- The current slot is the latest slot whose time has passed today. Before today's first time, keep showing the previous day's last slot (its day and slot index), not a new prompt.
+- While the app is open, check at the start of every minute and when it comes back to the foreground, so the prompt changes right at its time without a reload.
+- "Not today, another one" moves to another prompt in the shuffled order for the current slot. Store that small offset in `localStorage` with the slot it belongs to (day, slot, prompts per day); it is discarded as soon as the next prompt appears.
   - Implementation note: each skip jumps 71 places in the shuffled order (71 shares no factor with 140), not just one. The very next prompt is tomorrow's (or the next slot's), so a one-step skip would show it again the following day. Skips never land on another of today's slots.
 
 ## Reminders: the calendar approach (no push notifications)
@@ -127,6 +129,7 @@ Test on Android (Google Calendar) and iPhone (Apple Calendar).
 ## Reloading
 
 - Pull-to-refresh is disabled (`overscroll-behavior-y: contain` on `html` and `body`).
+- Settings, and the welcome re-read from Settings, are pushed onto the browser history, so the Android back gesture/button goes back a screen (welcome → Settings → prompt) instead of closing the app. The app's own back links go back through the history the same way.
 - The open screen is kept in the URL hash (`#settings`, `#welcome`, `#reminders`; the prompt screen has none), so a reload reopens the same screen, scrolled to the top. A new user who hasn't finished the welcome always starts there (or back in the setup step).
 
 ## Out of scope for now

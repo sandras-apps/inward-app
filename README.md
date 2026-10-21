@@ -53,7 +53,7 @@ When you change any file, also change `VERSION` at the top of `sw.js` (for examp
 
 ## How the daily prompt is chosen
 
-The prompts are shuffled once with a fixed seed, so themes and kinds of prompt are mixed. Each day and time slot then points to the next places in that list, so everyone sees the same prompt on the same day and it stays the same if you reopen the app. "Not today, another one" picks a different prompt for that slot, for today only.
+The prompts are shuffled once with a fixed seed, so themes and kinds of prompt are mixed. Each day and time slot then points to the next places in that list. A new prompt appears at each time you chose and stays until the next one, even if you reopen the app; before your first time of the day, yesterday's last prompt stays. "Not today, another one" picks a different prompt until the next one is due.
 
 ## Licence
 
