@@ -46,12 +46,14 @@
     <div class="column">
       <h2 class="screen-title" data-i18n="remindersStepTitle"></h2>
       <p data-i18n="remindersStepText"></p>
-      <!-- Android only: Google Calendar ignores our alert time, so guide the user first -->
-      <ol class="quiet calendar-android-note" hidden>
-        <li data-i18n="calendarStep1"></li>
-        <li data-i18n="calendarStep2"></li>
-      </ol>
-      <div class="actions calendar-actions"></div>
+      <div data-calendar="setup">
+        <!-- Android only: Google Calendar ignores our alert time, so guide the user first -->
+        <ol class="quiet calendar-android-note" hidden>
+          <li data-i18n="calendarStep1"></li>
+          <li data-i18n="calendarStep2"></li>
+        </ol>
+        <div class="actions calendar-actions"></div>
+      </div>
       <p class="quiet note calendar-status" role="status"></p>
       <p class="quiet" data-i18n="remindersStepHelp"></p>
       <!-- Shown only where installing is possible and the app isn't installed yet -->
@@ -88,11 +90,16 @@
 
       <section class="setting">
         <h3 class="setting-title" data-i18n="remindersTitle"></h3>
-        <ol class="quiet calendar-android-note" hidden>
-          <li data-i18n="calendarStep1"></li>
-          <li data-i18n="calendarStep2"></li>
-        </ol>
-        <div class="calendar-actions"></div>
+        <!-- Once used, the buttons fold into one quiet link: we can't know if the event was saved -->
+        <div data-calendar="settings">
+          <p class="quiet calendar-changed" data-i18n="calendarChanged" hidden></p>
+          <ol class="quiet calendar-android-note" hidden>
+            <li data-i18n="calendarStep1"></li>
+            <li data-i18n="calendarStep2"></li>
+          </ol>
+          <div class="calendar-actions"></div>
+          <button type="button" class="link calendar-reveal" data-i18n="calendarReveal" hidden></button>
+        </div>
         <p class="quiet" data-i18n="calendarHelp"></p>
         <p class="quiet note calendar-status" role="status"></p>
       </section>

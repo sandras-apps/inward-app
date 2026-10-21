@@ -282,8 +282,13 @@ body::before {
   padding-top: 1.25rem;
 }
 
-#settings .calendar-android-note {
+#settings .calendar-android-note,
+.calendar-changed {
   margin: 0 0 1.25rem;
+}
+
+.calendar-reveal {
+  text-align: left;
 }
 
 .calendar-actions {
