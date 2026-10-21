@@ -404,6 +404,11 @@ legend.setting-title + * {
   flex: none;
 }
 
+/* The same control at the bottom of Settings */
+.actions .back-home {
+  margin: 0;
+}
+
 .link.small {
   font-size: 0.9375rem;
   color: var(--ink-soft);

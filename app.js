@@ -53,7 +53,6 @@
       rereadWelcome: "Rileggi il benvenuto",
       aboutTitle: "Informazioni e privacy",
       about: "Inward è gratuita e non raccoglie nessun dato: niente account, niente tracciamento, niente cookie. Le tue impostazioni restano solo su questo dispositivo. I promemoria vivono nel tuo calendario, non qui. E quello che scrivi resta sulla carta.",
-      back: "Torna allo spunto",
       loadError: "Gli spunti non si sono caricati. Riprova tra poco."
     },
     en: {
@@ -101,7 +100,6 @@
       rereadWelcome: "Re-read the welcome",
       aboutTitle: "About & privacy",
       about: "Inward is free and collects no data: no accounts, no tracking, no cookies. Your settings stay on this device only. Reminders live in your own calendar, not here. And what you write stays on paper.",
-      back: "Back to the prompt",
       loadError: "The prompts couldn't load. Please try again in a moment."
     }
   };
