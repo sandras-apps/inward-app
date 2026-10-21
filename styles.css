@@ -390,6 +390,20 @@ legend.setting-title + * {
   text-decoration-color: currentColor;
 }
 
+/* "← Home" at the top of Settings (the arrow is drawn: the font has no arrow glyph) */
+.back-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: -0.5rem 0 1.25rem;
+  font-size: 0.9375rem;
+  color: var(--ink-soft);
+}
+
+.back-arrow {
+  flex: none;
+}
+
 .link.small {
   font-size: 0.9375rem;
   color: var(--ink-soft);

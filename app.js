@@ -18,6 +18,7 @@
       invitation: "Rallenta, respira, e scrivi finché c'è qualcosa da dire.",
       another: "Non oggi, un'altra",
       settings: "Impostazioni",
+      home: "Home",
       language: "Lingua",
       perDay: "Spunti al giorno",
       times: { one: "L'ora del tuo spunto", many: "Gli orari dei tuoi spunti" },
@@ -65,6 +66,7 @@
       invitation: "Slow down, breathe, and write until there's nothing left to say.",
       another: "Not today, another one",
       settings: "Settings",
+      home: "Home",
       language: "Language",
       perDay: "Prompts per day",
       times: { one: "Time of your prompt", many: "Times of your prompts" },
@@ -605,15 +607,29 @@
     if (meta && color) meta.setAttribute("content", color);
   }
 
-  function showScreen(id) {
+  // how: "push" adds a step to the browser history (Settings, and the welcome
+  // re-read from Settings), so Android's back gesture returns from it instead of
+  // closing the app; "pop" is that back step arriving; anything else replaces.
+  function showScreen(id, how) {
+    var current = $all(".screen").filter(function (el) { return !el.hidden; })[0];
+    // Leaving Settings by any way (link, Home, back gesture): keep the times tidy.
+    if (current && current.id === "settings" && id !== "settings") {
+      readTimes($("#settings [data-choices]"));
+      saveSettings();
+      tidyTimes();
+    }
     $all(".screen").forEach(function (el) {
       el.hidden = el.id !== id;
     });
     // Keep the open screen in the address (#settings…), so a reload reopens it.
-    try {
-      history.replaceState(null, "", id === "today" ? location.pathname + location.search : "#" + id);
-    } catch (e) {
-      // Not allowed in some sandboxed views: a reload then simply starts on the prompt.
+    if (how !== "pop") {
+      try {
+        var url = id === "today" ? location.pathname + location.search : "#" + id;
+        if (how === "push") history.pushState({ inward: "pushed" }, "", url);
+        else history.replaceState(null, "", url);
+      } catch (e) {
+        // Not allowed in some sandboxed views: a reload then simply starts on the prompt.
+      }
     }
     window.scrollTo(0, 0);
     // Redraw the form each time, so it always shows what is saved
@@ -737,6 +753,13 @@
     renderPrompt();
   }
 
+  // Go back one screen: through the history when the screen was pushed (so our
+  // links and Android's back gesture agree), otherwise straight to the fallback.
+  function goBack(fallback) {
+    if (history.state && history.state.inward === "pushed") history.back();
+    else showScreen(fallback);
+  }
+
   function finishSetup() {
     tidyTimes();
     settings.welcomed = true;
@@ -802,7 +825,8 @@
 
   function bindEvents() {
     $("#welcome-continue").addEventListener("click", function () {
-      showScreen(settings.welcomed ? "settings" : "setup");
+      if (settings.welcomed) goBack("settings");
+      else showScreen("setup");
     });
     $("#setup-start").addEventListener("click", function () {
       readTimes($("#setup [data-choices]"));
@@ -818,16 +842,20 @@
     });
     $("#another").addEventListener("click", anotherPrompt);
     $("#open-settings").addEventListener("click", function () {
-      showScreen("settings");
+      showScreen("settings", "push");
+    });
+    $("#back-home").addEventListener("click", function () {
+      goBack("today");
     });
     $("#close-settings").addEventListener("click", function () {
-      readTimes($("#settings [data-choices]"));
-      saveSettings();
-      tidyTimes();
-      showScreen("today");
+      goBack("today");
     });
     $("#reread-welcome").addEventListener("click", function () {
-      showScreen("welcome");
+      showScreen("welcome", "push");
+    });
+    // Android back gesture / button, and the browser's back button.
+    window.addEventListener("popstate", function () {
+      showScreen(firstScreen(), "pop");
     });
 
     // Keep the prompt and colours current while the app stays open: check at the
