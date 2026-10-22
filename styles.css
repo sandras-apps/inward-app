@@ -337,6 +337,10 @@ body::before {
   margin: 0.75rem 0 0;
 }
 
+.analytics-note {
+  font-style: italic;
+}
+
 .note:empty {
   display: none;
 }

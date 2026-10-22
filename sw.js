@@ -73,7 +73,7 @@ self.addEventListener("fetch", function (event) {
   var request = event.request;
   if (request.method !== "GET") return;
   var path = appPath(request.url);
-  if (path === null) return;
+  if (path === null) return; // other sites (e.g. GoatCounter's count): not cached, not touched
 
   if (request.mode === "navigate" || FRESH_FIRST.indexOf(path) !== -1) {
     var key = FRESH_FIRST.indexOf(path) !== -1 ? path : "index.html";

@@ -1,5 +1,6 @@
 /* Inward — one journal prompt at a time, to answer on paper.
-   No accounts, no tracking, no server. Only settings are saved, in localStorage. */
+   No accounts, no cookies, no server. Only settings are saved, in localStorage.
+   The one outside request is GoatCounter's anonymous visit count (see index.html). */
 
 (function () {
   "use strict";
@@ -55,7 +56,8 @@
       rereadWelcome: "Rileggi il benvenuto",
       aboutTitle: "Informazioni e privacy",
       infoLink: "Leggi tutto: informazioni e privacy",
-      about: "Inward è gratuita e non raccoglie nessun dato: niente account, niente tracciamento, niente cookie. Le tue impostazioni restano solo su questo dispositivo. I promemoria vivono nel tuo calendario, non qui. E quello che scrivi resta sulla carta.",
+      analyticsNote: "Solo un conteggio anonimo delle visite. Niente cookie, nessun dato personale.",
+      about: "Inward è gratuita e non raccoglie dati personali: niente account, niente cookie. Le tue impostazioni restano solo su questo dispositivo. I promemoria vivono nel tuo calendario, non qui. E quello che scrivi resta sulla carta.",
       loadError: "Gli spunti non si sono caricati. Riprova tra poco."
     },
     en: {
@@ -105,7 +107,8 @@
       rereadWelcome: "Re-read the welcome",
       aboutTitle: "About & privacy",
       infoLink: "Read more: info & privacy",
-      about: "Inward is free and collects no data: no accounts, no tracking, no cookies. Your settings stay on this device only. Reminders live in your own calendar, not here. And what you write stays on paper.",
+      analyticsNote: "Anonymous visit count only. No cookies, no personal data.",
+      about: "Inward is free and collects no personal data: no accounts, no cookies. Your settings stay on this device only. Reminders live in your own calendar, not here. And what you write stays on paper.",
       loadError: "The prompts couldn't load. Please try again in a moment."
     }
   };

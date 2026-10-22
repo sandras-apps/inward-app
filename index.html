@@ -123,6 +123,7 @@
       <section class="setting">
         <h3 class="setting-title" data-i18n="aboutTitle"></h3>
         <p class="quiet" data-i18n="about"></p>
+        <p class="quiet analytics-note" data-i18n="analyticsNote"></p>
         <button type="button" class="link" id="open-info" data-i18n="infoLink"></button>
       </section>
 
@@ -149,8 +150,9 @@
         <h3 class="setting-title">Chi fa Inward</h3>
         <p>Inward è un progetto gratuito e non commerciale di Sandra’s Apps. Contatti: <a href="mailto:sandras.apps.studio@gmail.com">sandras.apps.studio@gmail.com</a></p>
 
-        <h3 class="setting-title">Niente cookie, niente tracciamento</h3>
-        <p>Inward non usa cookie, statistiche né pubblicità, e non ha account. Non carica script né font di terze parti: tutto ciò che serve, font compreso, fa parte dell’app.</p>
+        <h3 class="setting-title">Niente cookie, solo un conteggio anonimo</h3>
+        <p>Inward non usa cookie né pubblicità, e non ha account. Non carica font di terze parti: tutto ciò che serve, font compreso, fa parte dell’app.</p>
+        <p>L’unica eccezione è un conteggio anonimo delle visite con GoatCounter: quando apri l’app, uno script di GoatCounter conta la visita (la pagina, il sito da cui arrivi, il tipo di browser e di schermo, il paese approssimativo). Secondo GoatCounter, non usa cookie e non conserva gli indirizzi IP né altri dati personali; vale la sua <a href="https://www.goatcounter.com/help/privacy" target="_blank" rel="noopener noreferrer">informativa sulla privacy</a>. Nient’altro viene inviato: le tue impostazioni restano sul dispositivo.</p>
 
         <h3 class="setting-title">Cosa viene salvato, e dove</h3>
         <p>Solo ciò che serve all’app per funzionare, nella memoria locale del browser, sul tuo dispositivo:</p>
@@ -181,7 +183,7 @@
         <h3 class="setting-title">Così com’è</h3>
         <p>Inward è gratuita e offerta così com’è, senza garanzie. È e resterà gratuita.</p>
 
-        <p class="quiet info-updated">Ultimo aggiornamento: 21/10/2026</p>
+        <p class="quiet info-updated">Ultimo aggiornamento: 22/10/2026</p>
       </div>
 
       <div class="info-text" lang="en">
@@ -190,8 +192,9 @@
         <h3 class="setting-title">Who makes Inward</h3>
         <p>Inward is a free, non-commercial project by Sandra’s Apps. Contact: <a href="mailto:sandras.apps.studio@gmail.com">sandras.apps.studio@gmail.com</a></p>
 
-        <h3 class="setting-title">No cookies, no tracking</h3>
-        <p>Inward uses no cookies, no analytics and no ads, and has no accounts. It loads no third-party scripts or fonts: everything it needs, the font included, comes with the app itself.</p>
+        <h3 class="setting-title">No cookies, only an anonymous count</h3>
+        <p>Inward uses no cookies and no ads, and has no accounts. It loads no third-party fonts: everything it needs, the font included, comes with the app itself.</p>
+        <p>The one exception is an anonymous visit count with GoatCounter: when you open the app, a GoatCounter script counts the visit (the page, the site you came from, your type of browser and screen, your approximate country). According to GoatCounter, it uses no cookies and doesn’t keep IP addresses or other personal data; its <a href="https://www.goatcounter.com/help/privacy" target="_blank" rel="noopener noreferrer">privacy policy</a> applies. Nothing else is sent: your settings stay on your device.</p>
 
         <h3 class="setting-title">What is stored, and where</h3>
         <p>Only what the app needs to work, in your browser’s local storage on your own device:</p>
@@ -222,7 +225,7 @@
         <h3 class="setting-title">Use as is</h3>
         <p>Inward is free and offered as is, without warranties. It is and will remain free.</p>
 
-        <p class="quiet info-updated">Last updated: 21/10/2026</p>
+        <p class="quiet info-updated">Last updated: 22/10/2026</p>
       </div>
 
       <div class="actions">
@@ -264,5 +267,7 @@
   </noscript>
 
   <script src="app.js"></script>
+  <!-- Anonymous visit count (GoatCounter): pageviews only, no cookies. If it can't load, nothing else is affected. -->
+  <script data-goatcounter="https://inward-app.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
