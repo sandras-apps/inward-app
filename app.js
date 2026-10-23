@@ -126,6 +126,65 @@
       moreAppsTitle: "More apps by Sandra",
       moreAppsNote: "Like Inward? I've made these too.",
       loadError: "The prompts couldn't load. Please try again in a moment."
+    },
+    es: {
+      welcome: "Antes de empezar, busca un cuaderno, un diario o una libretita, y un bolígrafo que te guste usar. Será tu espacio. Aquí solo encuentras las propuestas: lo que escribes se queda en el papel, y es solo tuyo.",
+      continue: "Continuar",
+      setupTitle: "Unas pocas elecciones",
+      setupNote: "Puedes cambiarlas cuando quieras en los ajustes.",
+      start: "Empezar",
+      skip: "Saltar, así está bien",
+      invitation: "Ve despacio, respira y escribe mientras tengas algo que decir.",
+      another: "Hoy no, otra",
+      settings: "Ajustes",
+      updateReady: "Te espera una nueva versión de Inward · Actualizar",
+      home: "Inicio",
+      language: "Idioma",
+      perDay: "Propuestas al día",
+      times: { one: "La hora de tu propuesta", many: "Las horas de tus propuestas" },
+      timesNote: { one: "A esta hora encuentras una propuesta nueva, aquí en la app.", many: "A estas horas encuentras una propuesta nueva, aquí en la app." },
+      timesNext: "Si también quieres un recordatorio, hay un paso más justo después.",
+      daily: "Cada día a las",
+      slots: ["Primera propuesta", "Segunda propuesta", "Tercera propuesta"],
+      remindersTitle: "Recordatorios",
+      addCalendar: "Añadir los recordatorios a mi calendario",
+      calendarHelp: "El recordatorio llega desde el calendario del móvil: tócalo para abrir Inward. Para cambiar las horas, borra el evento antiguo de Inward del calendario y añade el nuevo.",
+      addTime: "Añadir las {time}",
+      calendarStep1: {
+        one: "Toca el botón: se abre Google Calendar.",
+        many: "Toca un botón cada vez: se abre Google Calendar."
+      },
+      calendarStep2: "Antes de guardar, toca ‘30 minutos antes’ y elige ‘A la hora del evento’.",
+      calendarReady: "Archivo listo: abre el archivo descargado y elige tu app de Calendario.",
+      calendarAgain: "¿Aún no has añadido el recordatorio al calendario? Toca aquí",
+      calendarAgainTime: "¿Aún no has añadido el recordatorio de las {time}? Toca aquí",
+      calendarFoldedHint: "Antes de guardar, elige la notificación ‘A la hora del evento’.",
+      calendarChanged: "Has cambiado la hora: borra el evento antiguo de Inward del calendario y añade el nuevo.",
+      calendarTitle: "Inward · Un momento para ti",
+      calendarDescription: "Un momento para ti. Coge tu cuaderno y abre Inward.",
+      remindersStepTitle: "Un recordatorio, si quieres",
+      remindersStepText: {
+        one: "Inward no puede enviarte notificaciones por sí sola. Si quieres un recordatorio, puedes añadirlo al calendario de tu móvil: llegará a la hora que has elegido y, al tocarlo, se abrirá Inward.",
+        many: "Inward no puede enviarte notificaciones por sí sola. Si quieres un recordatorio, puedes añadirlo al calendario de tu móvil: llegará a las horas que has elegido y, al tocarlo, se abrirá Inward."
+      },
+      remindersStepHelp: "Si algún día cambias las horas, también encontrarás este botón en los ajustes.",
+      notNow: "Ahora no",
+      install: "Instalar la app",
+      installIos: "Para instalar la app: toca Compartir y luego ‘Añadir a pantalla de inicio’.",
+      rereadWelcome: "Volver a leer la bienvenida",
+      aboutTitle: "Información y privacidad",
+      infoLink: "Leer más: información y privacidad",
+      analyticsNote: "Solo un recuento anónimo de visitas. Sin cookies, sin datos personales.",
+      about: "Inward es gratuita y no recoge datos personales: sin cuentas, sin cookies. Tus ajustes se quedan solo en este dispositivo. Los recordatorios viven en tu calendario, no aquí. Y lo que escribes se queda en el papel.",
+      shareTitle: "¿Te está gustando?",
+      shareNote: "Compártela con quien pueda encontrarla útil.",
+      shareButton: "Compartir Inward",
+      shareMessage: "He descubierto Inward: cada día te hace una pregunta profunda y respondes en tu diario de papel. Sin cuenta, sin datos guardados 👉",
+      shareCopied: "Enlace copiado: pégalo donde quieras.",
+      shareFailed: "El enlace no se ha copiado. Aquí lo tienes:",
+      moreAppsTitle: "Otras apps de Sandra",
+      moreAppsNote: "¿Te gusta Inward? También he hecho estas.",
+      loadError: "Las propuestas no se han cargado. Vuelve a intentarlo dentro de un momento."
     }
   };
 
@@ -148,6 +207,7 @@
       var code = String(langs[i]).toLowerCase();
       if (code.indexOf("it") === 0) return "it";
       if (code.indexOf("en") === 0) return "en";
+      if (code.indexOf("es") === 0) return "es";
     }
     return "en";
   }
@@ -180,7 +240,7 @@
     var s = defaultSettings();
     var saved = readJSON(SETTINGS_KEY);
     if (saved && typeof saved === "object") {
-      if (saved.lang === "it" || saved.lang === "en") s.lang = saved.lang;
+      if (saved.lang === "it" || saved.lang === "en" || saved.lang === "es") s.lang = saved.lang;
       if ([1, 2, 3].indexOf(saved.perDay) !== -1) s.perDay = saved.perDay;
       s.times = DEFAULT_TIMES[s.perDay].slice();
       if (Array.isArray(saved.times) && saved.times.length === s.perDay && saved.times.every(isTime)) {
@@ -635,13 +695,16 @@
   var OTHER_APPS = [
     { id: "inward", name: "Inward", url: "https://sandras-apps.github.io/inward-app/", live: true,
       it: "Una domanda profonda al giorno, da scrivere sul tuo diario di carta. Gratis, senza account.",
-      en: "One deep question a day, to answer in your own paper journal. Free, no account." },
+      en: "One deep question a day, to answer in your own paper journal. Free, no account.",
+      es: "Una pregunta profunda al día, para responder en tu diario de papel. Gratis, sin cuenta." },
     { id: "quota", name: "Quota", url: "https://sandras-apps.github.io/quota-app/", live: false,
       it: "Ti dice quanto puoi spendere oggi; se un giorno risparmi, il giorno dopo hai di più. Gratis, senza account.",
-      en: "Tells you how much you can spend today; save a little and tomorrow you have more. Free, no account." },
-    { id: "easy-recipes", name: "Easy Recipes", url: "https://sandras-apps.github.io/easy-recipes/", live: false,
+      en: "Tells you how much you can spend today; save a little and tomorrow you have more. Free, no account.",
+      es: "Te dice cuánto puedes gastar hoy; si un día ahorras, al día siguiente tienes más. Gratis, sin cuenta." },
+    { id: "easy-recipes", name: "Easy Recipes", url: "https://sandras-apps.github.io/easy-recipes/", live: true,
       it: "Ricette semplici con le dosi dentro ogni passaggio e i timer già pronti. Gratis, senza account.",
-      en: "Simple recipes with the amounts inside every step and timers ready to go. Free, no account." },
+      en: "Simple recipes with the amounts inside every step and timers ready to go. Free, no account.",
+      es: "Recetas sencillas con las cantidades dentro de cada paso y los temporizadores listos. Gratis, sin cuenta." },
     { id: "goatstep", name: "Goatstep", url: "", live: false, it: "", en: "" },
     { id: "moontick", name: "MoonTick", url: "https://getmoontick.com/", live: false, it: "", en: "" }
   ];

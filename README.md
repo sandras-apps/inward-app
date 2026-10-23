@@ -6,7 +6,7 @@
 
 A free, quiet web app that offers one journal prompt at a time, for you to answer **on paper**, in your own notebook. A small reflective pause in the day instead of doomscrolling.
 
-- 140 prompts in Italian and English, across seven themes.
+- 140 prompts in Italian, English and Spanish, across seven themes.
 - One prompt a day by default, or up to three, at the times you choose.
 - Reminders come through your own phone calendar: Inward makes a small calendar file you add once. There are no push notifications.
 - Works offline and can be installed on your phone's home screen.
@@ -24,7 +24,7 @@ Installing doesn't add notifications: reminders still come from your phone calen
 
 Inward collects no personal data. No accounts, no cookies, no ads, and the font is included in the app. The only outside request is an anonymous visit count with [GoatCounter](https://www.goatcounter.com/help/privacy) (pageviews only, no cookies). The only thing saved is your settings, in your browser's storage on your own device. What you write stays on paper.
 
-The full details are in the app: **[Info & Privacy](https://sandras-apps.github.io/inward-app/#info)** (in Italian or English, following the app's language).
+The full details are in the app: **[Info & Privacy](https://sandras-apps.github.io/inward-app/#info)** (in Italian, English or Spanish, following the app's language).
 
 ## Running it locally
 
@@ -43,7 +43,7 @@ then open http://localhost:8000.
 | `index.html` | The screens: welcome, first setup, today's prompt, settings |
 | `styles.css` | Look and feel: a colour for each category, a neutral look elsewhere, and a warm night palette from 21:00 to 05:00 |
 | `app.js` | Chooses the daily prompt, saves settings, makes the calendar file |
-| `prompts.json` | The 140 prompts and the theme names, in Italian and English |
+| `prompts.json` | The 140 prompts and the theme names, in Italian, English and Spanish |
 | `sw.js` | Service worker that keeps a copy of the app for offline use |
 | `manifest.webmanifest` | Lets phones install Inward like an app |
 | `fonts/` | Fraunces, self-hosted (SIL Open Font License, see `fonts/OFL.txt`) |

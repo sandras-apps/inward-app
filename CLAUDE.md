@@ -20,7 +20,7 @@ Part of the `sandras-apps` GitHub organization (same spirit as Easy Recipes). Ho
 index.html
 styles.css
 app.js
-prompts.json          ← provided, 140 prompts in IT/EN (do not rewrite them)
+prompts.json          ← provided, 140 prompts in IT/EN/ES (do not rewrite them; ES added 23 October 2026 at Alessandra's request)
 manifest.webmanifest
 sw.js                 ← service worker, offline cache of all app files
 fonts/                ← self-hosted serif font files (OFL licence)
@@ -58,8 +58,8 @@ Then a gentle button to continue, and a short step to choose language, how many 
 - Nothing else on screen.
 
 ### 3. Settings
-- At the top and at the bottom, the same quiet back control: a drawn "←" arrow followed by *Home* (same word in IT and EN), same quiet italic style as the other links. It goes back to the prompt screen.
-- Language: Italiano / English (default: browser language, fallback English).
+- At the top and at the bottom, the same quiet back control: a drawn "←" arrow followed by *Home* (same word in IT and EN; *Inicio* in ES), same quiet italic style as the other links. It goes back to the prompt screen.
+- Language: Italiano / English / Español (default: browser language, fallback English). Spanish added 23 October 2026: every text has an `es` version (STRINGS, prompts and categories, the Info & Privacy page).
 - Prompts per day: 1, 2 or 3 (default 1).
 - One time for each prompt (defaults: 1 → 18:00; 2 → 10:00, 18:00; 3 → 09:00, 14:00, 20:00).
 - **Add reminders to my calendar** button (see below).
