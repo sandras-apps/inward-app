@@ -654,3 +654,22 @@ noscript p {
     margin-bottom: 2.75rem;
   }
 }
+
+/* Sandra's other apps, at the bottom of Settings */
+.more-apps-list {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+}
+
+.more-apps-list li + li {
+  margin-top: 1rem;
+}
+
+.more-apps-list .link {
+  display: inline-block;
+}
+
+.more-apps-line {
+  margin-top: 0.1rem;
+}

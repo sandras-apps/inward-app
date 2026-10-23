@@ -64,6 +64,7 @@ Then a gentle button to continue, and a short step to choose language, how many 
 - One time for each prompt (defaults: 1 → 18:00; 2 → 10:00, 18:00; 3 → 09:00, 14:00, 20:00).
 - **Add reminders to my calendar** button (see below).
 - Re-read the welcome text.
+- **Share and other apps** (added 23 October 2026, Alessandra's decision): above About, "Ti sta piacendo? / Enjoying it?" with a *Condividi Inward / Share Inward* link that opens the phone's share menu (`navigator.share`) with a short message and the app link, or copies them where there is no share menu. Under it, "Altre app di Sandra / More apps by Sandra", built from `OTHER_APPS` in `app.js`: only apps with `live: true` are shown, and the section stays hidden while there are none. The same list lives in every Sandra's Apps app; "free, no account" is written only where it is true of that app.
 - A short, honest "About & privacy" note: no personal data collected, settings stay on this device, reminders live in the user's own calendar. Then one italic line: IT *Solo un conteggio anonimo delle visite. Niente cookie, nessun dato personale.* · EN *Anonymous visit count only. No cookies, no personal data.* Under it, a quiet link to the Info & Privacy page: IT *Leggi tutto: informazioni e privacy* · EN *Read more: info & privacy*.
 
 ### 4. Info & Privacy
@@ -162,7 +163,7 @@ Updates must reach people on their own. People open Inward, read the prompt and 
 
 ## Out of scope for now
 
-Choosing categories, favourites, history, sharing, streaks, more than 3 prompts per day, push notifications, any account or backend.
+Choosing categories, favourites, history, streaks, more than 3 prompts per day, push notifications, any account or backend.
 
 ## Working with me
 

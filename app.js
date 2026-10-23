@@ -58,6 +58,14 @@
       infoLink: "Leggi tutto: informazioni e privacy",
       analyticsNote: "Solo un conteggio anonimo delle visite. Niente cookie, nessun dato personale.",
       about: "Inward è gratuita e non raccoglie dati personali: niente account, niente cookie. Le tue impostazioni restano solo su questo dispositivo. I promemoria vivono nel tuo calendario, non qui. E quello che scrivi resta sulla carta.",
+      shareTitle: "Ti sta piacendo?",
+      shareNote: "Condividila con chi potrebbe trovarla utile.",
+      shareButton: "Condividi Inward",
+      shareMessage: "Ho scoperto Inward: ogni giorno ti fa una domanda profonda e rispondi sul tuo diario di carta. Niente account, niente dati salvati 👉",
+      shareCopied: "Link copiato: incollalo dove vuoi.",
+      shareFailed: "Il link non si è copiato. Eccolo:",
+      moreAppsTitle: "Altre app di Sandra",
+      moreAppsNote: "Ti piace Inward? Ho fatto anche queste.",
       loadError: "Gli spunti non si sono caricati. Riprova tra poco."
     },
     en: {
@@ -109,6 +117,14 @@
       infoLink: "Read more: info & privacy",
       analyticsNote: "Anonymous visit count only. No cookies, no personal data.",
       about: "Inward is free and collects no personal data: no accounts, no cookies. Your settings stay on this device only. Reminders live in your own calendar, not here. And what you write stays on paper.",
+      shareTitle: "Enjoying it?",
+      shareNote: "Share it with someone who might find it useful.",
+      shareButton: "Share Inward",
+      shareMessage: "I found Inward: once a day it asks you one deep question, and you answer in your own paper journal. No account, nothing saved 👉",
+      shareCopied: "Link copied: paste it wherever you like.",
+      shareFailed: "The link didn't copy. Here it is:",
+      moreAppsTitle: "More apps by Sandra",
+      moreAppsNote: "Like Inward? I've made these too.",
       loadError: "The prompts couldn't load. Please try again in a moment."
     }
   };
@@ -605,6 +621,78 @@
       el.hidden = el.getAttribute("lang") !== settings.lang;
     });
     renderChoices();
+    renderMoreApps();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Sharing, and Sandra's other apps (bottom of Settings)
+
+  var APP_URL = "https://sandras-apps.github.io/inward-app/";
+
+  // The same list lives in every one of Sandra's apps. Only apps with
+  // live: true are shown; flip the flag when an app is out for everyone.
+  // A line says "free, no account" only where that is true of the app.
+  var OTHER_APPS = [
+    { id: "inward", name: "Inward", url: "https://sandras-apps.github.io/inward-app/", live: true,
+      it: "Una domanda profonda al giorno, da scrivere sul tuo diario di carta. Gratis, senza account.",
+      en: "One deep question a day, to answer in your own paper journal. Free, no account." },
+    { id: "quota", name: "Quota", url: "https://sandras-apps.github.io/quota-app/", live: false,
+      it: "Ti dice quanto puoi spendere oggi; se un giorno risparmi, il giorno dopo hai di più. Gratis, senza account.",
+      en: "Tells you how much you can spend today; save a little and tomorrow you have more. Free, no account." },
+    { id: "easy-recipes", name: "Easy Recipes", url: "https://sandras-apps.github.io/easy-recipes/", live: false,
+      it: "Ricette semplici con le dosi dentro ogni passaggio e i timer già pronti. Gratis, senza account.",
+      en: "Simple recipes with the amounts inside every step and timers ready to go. Free, no account." },
+    { id: "goatstep", name: "Goatstep", url: "", live: false, it: "", en: "" },
+    { id: "moontick", name: "MoonTick", url: "https://getmoontick.com/", live: false, it: "", en: "" }
+  ];
+
+  function renderMoreApps() {
+    var section = $(".more-apps");
+    var list = $(".more-apps-list");
+    if (!section || !list) return;
+    var apps = OTHER_APPS.filter(function (app) {
+      return app.live && app.id !== "inward";
+    });
+    list.textContent = "";
+    apps.forEach(function (app) {
+      var item = document.createElement("li");
+      var link = document.createElement("a");
+      link.className = "link";
+      link.href = app.url;
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.textContent = app.name;
+      var line = document.createElement("p");
+      line.className = "quiet more-apps-line";
+      line.textContent = app[settings.lang] || app.en;
+      item.appendChild(link);
+      item.appendChild(line);
+      list.appendChild(item);
+    });
+    section.hidden = apps.length === 0;
+  }
+
+  // The phone's own share menu (WhatsApp, Telegram…): the app sends nothing
+  // itself, the person picks where it goes. Where there is no share menu
+  // (most computers), the message and link are copied instead.
+  function shareApp() {
+    var status = $(".share-status");
+    var message = text("shareMessage");
+    status.textContent = "";
+    if (navigator.share) {
+      navigator.share({ title: "Inward", text: message, url: APP_URL }).catch(function () {});
+      return;
+    }
+    var all = message + " " + APP_URL;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(all).then(function () {
+        status.textContent = text("shareCopied");
+      }, function () {
+        status.textContent = text("shareFailed") + " " + APP_URL;
+      });
+    } else {
+      status.textContent = text("shareFailed") + " " + APP_URL;
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -928,6 +1016,7 @@
     $("#reread-welcome").addEventListener("click", function () {
       showScreen("welcome", "push");
     });
+    $("#share-app").addEventListener("click", shareApp);
     // Android back gesture / button, and the browser's back button.
     window.addEventListener("popstate", function () {
       showScreen(firstScreen(), "pop");
